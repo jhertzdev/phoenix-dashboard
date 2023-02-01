@@ -1,32 +1,22 @@
 <template>
   <q-page class="flex column flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/logo-pt-squared.png"
-      style="width: 200px; height: 200px"
-    >
-    <div class="app-title">
-      <span class="text-primary">Phoenix </span>
-      <span class="text-secondary">Tech</span>
+    <div class="user-avatar">
+      <q-icon name="face_6" />
     </div>
-
     <div v-if="username.length">
-      Bienvenido, @{{ username }}
+      Bienvenido, <strong>@{{ username }}</strong>
     </div>
-
   </q-page>
 </template>
 
 <style>
-  .app-title {
-    margin-top: 15px;
-    font-size: 2rem;
-    font-weight: 500;
-  }
-
-  .app-title span:first-child {
-    font-weight: 900;
-  }
+.user-avatar{ 
+  color: var(--q-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 5rem;
+}
 </style>
 
 <script setup>

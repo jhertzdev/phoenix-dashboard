@@ -59,12 +59,6 @@
     font-size: 5rem;
   }
 
-  .app-title {
-    font-size: 2rem;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-  }
-
   .app-title span:first-child {
     font-weight: 900;
   }
