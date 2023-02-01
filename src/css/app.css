@@ -1,1 +1,12 @@
 /* app global css */
+.q-item__label.q-item__label--caption.text-caption:empty {
+  display: none;
+}
+
+.q-icon.on-right {
+  margin-left: 6px;
+}
+
+.q-icon.on-left {
+  margin-right: 6px;
+}

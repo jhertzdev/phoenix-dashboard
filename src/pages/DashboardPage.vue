@@ -9,6 +9,11 @@
       <span class="text-primary">Phoenix </span>
       <span class="text-secondary">Tech</span>
     </div>
+
+    <div v-if="username.length">
+      Bienvenido, @{{ username }}
+    </div>
+
   </q-page>
 </template>
 
@@ -25,5 +30,10 @@
 </style>
 
 <script setup>
+
+import { useQuasar } from 'quasar';
+const $q = useQuasar()
+
+const username = $q.localStorage.getItem('username')
 
 </script>

@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Dashboard
+          {{ getTitleFromPath(this.$route.path) }}
         </q-toolbar-title>
 
       </q-toolbar>
@@ -51,12 +51,22 @@ import MenuLink from 'src/components/MenuLink.vue'
 
 const linksList = [
   {
-    title: 'Inicio',
-    caption: 'Volver al inicio',
-    icon: 'home',
+    title: 'Iniciar sesión',
+    icon: 'login',
     to: '/'
-  }
+  },
+  {
+    title: 'Dashboard',
+    icon: 'dashboard',
+    to: '/dashboard'
+  },
 ]
+
+const getTitleFromPath = (path) => {
+  if (path == '/' || path == '/login') return 'Inicio de sesión'
+  if (path == '/dashboard') return 'Dashboard'
+  return 'Dashboard'
+}
 
 const leftDrawerOpen = ref(false)
 
