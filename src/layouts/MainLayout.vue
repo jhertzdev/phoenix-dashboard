@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header v-if="!['/', '/login'].includes(this.$route.path)" elevated>
       <q-toolbar>
         <q-btn
           flat

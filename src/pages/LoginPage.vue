@@ -4,7 +4,7 @@
     <div class="login-card">
 
       <div class="login-header">
-        <q-icon name="face_6" />
+        Inicio de sesión
       </div>
       
       <q-form
@@ -55,8 +55,8 @@
     color: var(--q-secondary);
     text-transform: uppercase;
     font-weight: 600;
-    margin-bottom: 1.5rem;
-    font-size: 5rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
   }
 
   .app-title span:first-child {
