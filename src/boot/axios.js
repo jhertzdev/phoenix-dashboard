@@ -1,7 +1,11 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '' })
+const api = axios.create({ baseURL: 'https://excel.api.phoenixtechsa.com/api/' })
+
+if (localStorage.getItem('token')) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+}
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

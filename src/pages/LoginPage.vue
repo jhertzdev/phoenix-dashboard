@@ -32,7 +32,7 @@
         />
   
         <div class="text-center q-mt-lg">
-          <q-btn square label="Iniciar sesión" type="submit" color="primary" icon-right="arrow_forward_ios" />
+          <q-btn square label="Iniciar sesión" type="submit" color="primary" icon-right="arrow_forward_ios" :loading="buttonLoading" />
         </div>
 
       </q-form>
@@ -67,41 +67,42 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { ref, watch, toRef } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router';
-
+import { useAuthStore } from 'stores/auth.store';
+import { useAppStore } from 'src/stores/app.store';
 
 const $q = useQuasar()
 const router = useRouter()
+const authStore = useAuthStore()
+const appStore = useAppStore()
+
+watch(toRef(appStore, 'modalMessage'), () => {
+  if (!appStore.modalIsVisible) {
+    appStore.modalIsVisible = true
+    $q.dialog({
+      title: appStore.modalMessage.title,
+      message: appStore.modalMessage.message
+    }).onDismiss(() => {
+      appStore.modalIsVisible = false
+    })
+  }
+});
 
 const userData = ref({
   username: '',
   password: ''
 })
 
+const buttonLoading = ref(false)
+
 const handleSubmit = () => {
+  buttonLoading.value = true
   $q.localStorage.set('username', userData.value.username)
-  showModal()
-}
-
-const showModal = () => {
-  const dialog = $q.dialog({
-    message: 'Iniciando sesión...',
-    progress: true,
-    persistent: true,
-    ok: false
+  authStore.login(userData.value.username, userData.value.password).finally(() => {
+    buttonLoading.value = false
   })
-
-  setTimeout(() => {
-    dialog.hide()
-    $q.dialog({
-      title: 'Inicio de sesión',
-      message: '¡Has iniciado sesión correctamente!'
-    }).onDismiss(() => {
-      router.push({ path: '/dashboard' })
-    })
-  }, 1000)
 }
 
 </script>

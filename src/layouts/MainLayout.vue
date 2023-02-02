@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/', '/login'].includes(this.$route.path)" elevated>
+    <q-header v-if="!['/login'].includes(this.$route.path)" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -53,18 +53,18 @@ const linksList = [
   {
     title: 'Iniciar sesión',
     icon: 'login',
-    to: '/'
+    to: '/login'
   },
   {
     title: 'Dashboard',
     icon: 'dashboard',
-    to: '/dashboard'
+    to: '/'
   },
 ]
 
 const getTitleFromPath = (path) => {
-  if (path == '/' || path == '/login') return 'Inicio de sesión'
-  if (path == '/dashboard') return 'Dashboard'
+  if (path == '/') return 'Dashboard'
+  if (path == '/login') return 'Inicio de sesión'
   return 'Dashboard'
 }
 

@@ -3,8 +3,8 @@
     <div class="user-avatar">
       <q-icon name="face_6" />
     </div>
-    <div v-if="username.length">
-      Bienvenido, <strong>@{{ username }}</strong>
+    <div v-if="authStore.user">
+      Bienvenido, <strong>{{ authStore.user.name }}</strong>
     </div>
   </q-page>
 </template>
@@ -21,9 +21,8 @@
 
 <script setup>
 
-import { useQuasar } from 'quasar';
-const $q = useQuasar()
+import { useAuthStore } from 'src/stores/auth.store';
 
-const username = $q.localStorage.getItem('username')
+const authStore = useAuthStore()
 
 </script>
