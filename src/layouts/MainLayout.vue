@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/login'].includes(this.$route.path)" elevated>
+    <q-header v-if="!['/login'].includes(route.path)" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          {{ getTitleFromPath(this.$route.path) }}
+          {{ getTitleFromPath(route.path) }}
         </q-toolbar-title>
 
       </q-toolbar>
@@ -48,6 +48,9 @@
 
 import { ref } from 'vue'
 import MenuLink from 'src/components/MenuLink.vue'
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 const linksList = [
   {
