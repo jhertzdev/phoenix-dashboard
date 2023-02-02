@@ -69,12 +69,10 @@
 
 import { ref, watch, toRef } from 'vue'
 import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router';
 import { useAuthStore } from 'stores/auth.store';
 import { useAppStore } from 'src/stores/app.store';
 
 const $q = useQuasar()
-const router = useRouter()
 const authStore = useAuthStore()
 const appStore = useAppStore()
 

@@ -35,6 +35,11 @@
           :key="link.title"
           v-bind="link"
         />
+        <MenuLink key="logLink" 
+          :icon="authStore.user.id ? 'logout' : 'login'" 
+          :to="authStore.user.id ? '/logout' : '/login'" 
+          :title="authStore.user.id ? 'Cerrar sesión' : 'Iniciar sesión' "
+        />
       </q-list>
     </q-drawer>
 
@@ -49,15 +54,13 @@
 import { ref } from 'vue'
 import MenuLink from 'src/components/MenuLink.vue'
 import { useRoute } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth.store';
+
+const authStore = useAuthStore()
 
 const route = useRoute()
 
 const linksList = [
-  {
-    title: 'Iniciar sesión',
-    icon: 'login',
-    to: '/login'
-  },
   {
     title: 'Dashboard',
     icon: 'dashboard',
