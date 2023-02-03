@@ -1,9 +1,9 @@
 <template>
   <q-page class="flex flex-center q-pa-md">
 
-    <div class="login-card">
+    <div class="auth-card">
 
-      <div class="login-header">
+      <div class="auth-header">
         Inicio de sesión
       </div>
       
@@ -15,10 +15,10 @@
           filled
           square
           type="text"
-          v-model="userData.username"
-          label="Nombre de usuario"
+          v-model="userData.email"
+          label="E-mail"
           lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Ingresa tu nombre de usuario.' ]"
+          :rules="[ (val, rules) => rules.email(val) || 'Ingresa un e-mail válido.' ]"
         />
   
         <q-input
@@ -36,34 +36,11 @@
         </div>
 
       </q-form>
-
+      
     </div>
 
   </q-page>
 </template>
-
-<style>
-
-  .login-card {
-    text-align: center;
-    width: 100%;
-    padding: 0 10px;
-    max-width: 400px;
-  }
-
-  .login-header {
-    color: var(--q-secondary);
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    font-size: 1.5rem;
-  }
-
-  .app-title span:first-child {
-    font-weight: 900;
-  }
-  
-</style>
 
 <script setup>
 
@@ -89,7 +66,7 @@ watch(toRef(appStore, 'modalMessage'), () => {
 });
 
 const userData = ref({
-  username: '',
+  email: '',
   password: ''
 })
 
@@ -97,8 +74,7 @@ const buttonLoading = ref(false)
 
 const handleSubmit = () => {
   buttonLoading.value = true
-  $q.localStorage.set('username', userData.value.username)
-  authStore.login(userData.value.username, userData.value.password).finally(() => {
+  authStore.login(userData.value.email, userData.value.password).finally(() => {
     buttonLoading.value = false
   })
 }

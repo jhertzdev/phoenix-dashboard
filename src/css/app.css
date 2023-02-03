@@ -10,3 +10,28 @@
 .q-icon.on-left {
   margin-right: 6px;
 }
+
+/* Login y registro */
+
+.auth-card {
+  text-align: center;
+  width: 100%;
+  padding: 0 10px;
+  max-width: 400px;
+}
+
+.auth-header {
+  color: var(--q-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.auth-footer p {
+  margin-bottom: 0;
+}
+
+.auth-footer a {
+  font-weight: 600;
+}

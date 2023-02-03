@@ -36,9 +36,9 @@
           v-bind="link"
         />
         <MenuLink key="logLink" 
-          :icon="authStore.user.id ? 'logout' : 'login'" 
-          :to="authStore.user.id ? '/logout' : '/login'" 
-          :title="authStore.user.id ? 'Cerrar sesión' : 'Iniciar sesión' "
+          :icon="authStore.user?.id ? 'logout' : 'login'" 
+          :to="authStore.user?.id ? '/logout' : '/login'" 
+          :title="authStore.user?.id ? 'Cerrar sesión' : 'Iniciar sesión' "
         />
       </q-list>
     </q-drawer>
