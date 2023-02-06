@@ -43,7 +43,7 @@
           v-for="link in menuLinks"
           :key="link.title"
           v-bind="link"
-          v-show="authStore.user?.id ? true:false"
+          v-show="!!authStore.user?.id"
         />
         <MenuLink key="logLink" 
           :icon="authStore.user?.id ? 'logout' : 'login'" 
@@ -52,6 +52,9 @@
           v-show="authStore.user?.id ? false:true"
         />
       </q-list>
+      <q-item  clickable @click="logout()" v-show="!!authStore.user?.id">
+        Salir  
+      </q-item>
     </q-drawer>
 
     <q-page-container>
@@ -66,6 +69,7 @@ import { ref } from 'vue'
 import MenuLink from 'src/components/MenuLink.vue'
 import { useRoute } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
+import { useAppStore } from 'src/stores/app.store';
 
 const authStore = useAuthStore()
 
@@ -123,6 +127,9 @@ const toggleLeftDrawer = () => {
 
 const menuLinks = linksList
 
+const logout=()=>{
+  authStore.logout()
+}
 
 </script>
 
