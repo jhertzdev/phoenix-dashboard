@@ -40,10 +40,12 @@ export const useAuthStore = defineStore({
 
         },
         logout() {
-            this.userData = null;
+            this.user = null;
+            this.returnUrl = null;
+            this.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            this.router.push('/logout');
+            this.router.push('/login')
         }
     }
 });

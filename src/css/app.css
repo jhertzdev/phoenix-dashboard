@@ -35,3 +35,9 @@
 .auth-footer a {
   font-weight: 600;
 }
+
+/* Pages */
+h5.page-title {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}

@@ -1,5 +1,5 @@
 <template>
-  <q-page/>
+  <q-page>Cerrando sesión...</q-page>
 </template>
 
 <script setup>

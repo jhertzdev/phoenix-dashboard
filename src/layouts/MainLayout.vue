@@ -45,16 +45,8 @@
           v-bind="link"
           v-show="!!authStore.user?.id"
         />
-        <MenuLink key="logLink" 
-          :icon="authStore.user?.id ? 'logout' : 'login'" 
-          :to="authStore.user?.id ? '/logout' : '/login'" 
-          :title="authStore.user?.id ? 'Cerrar sesión' : 'Iniciar sesión' "
-          v-show="authStore.user?.id ? false:true"
-        />
       </q-list>
-      <q-item  clickable @click="logout" v-show="!!authStore.user?.id">
-        Salir  
-      </q-item>
+
     </q-drawer>
 
     <q-page-container>
@@ -111,6 +103,11 @@ const linksList = [
     icon: 'dashboard',
     to: '/users'
   },
+  {
+    title: 'Salir',
+    icon: 'logout',
+    to: '/logout'
+  }
 ]
 
 const getTitleFromPath = (path) => {
@@ -126,10 +123,6 @@ const toggleLeftDrawer = () => {
 }
 
 const menuLinks = linksList
-
-const logout=()=>{
-  authStore.logout()
-}
 
 </script>
 
