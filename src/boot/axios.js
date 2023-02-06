@@ -22,6 +22,6 @@ export default boot(({ app }) => {
 
 const ApiRest=function(url,config){
   config.Authorization=`Bearer ${localStorage.getItem('token')}`;
-  return fetch(url,config).then(m=>m.json());
+  return fetch(url_dev+url,config).then(m=>m.json());
 }
 export { axios, api,ApiRest}
