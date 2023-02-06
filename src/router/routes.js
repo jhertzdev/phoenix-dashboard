@@ -17,10 +17,17 @@ const routes = [
       
       //auth
       { path: 'login', component: () => import('pages/LoginPage.vue') },
-      { path: 'logout', component: () => import('pages/LogoutPage.vue') },
+      
     ]
   },
-
+  { 
+    path: '/logout',
+    component:()=>import('layouts/LogoutLayout.vue'),
+    children:[
+      {path:'/logout',component: () => import('pages/LoginPage.vue')}
+    ]
+  },
+  
   // Always leave this as last one,
   // but you can also remove it
   {

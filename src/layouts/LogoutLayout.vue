@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/login'].includes(route.path)" elevated>
+    <q-header v-if="!['/logout'].includes(route.path)" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -39,22 +39,13 @@
           Menú
         </q-item-label>
 
-        <MenuLink
-          v-for="link in menuLinks"
-          :key="link.title"
-          v-bind="link"
-          v-show="!!authStore.user?.id"
-        />
         <MenuLink key="logLink" 
-          :icon="authStore.user?.id ? 'logout' : 'login'" 
-          :to="authStore.user?.id ? '/logout' : '/login'" 
-          :title="authStore.user?.id ? 'Cerrar sesión' : 'Iniciar sesión' "
-          v-show="authStore.user?.id ? false:true"
+          icon="login" 
+          to="/login" 
+          title="Iniciar sesión"
+          
         />
       </q-list>
-      <q-item  clickable @click="logout" v-show="!!authStore.user?.id">
-        Salir  
-      </q-item>
     </q-drawer>
 
     <q-page-container>
@@ -75,43 +66,11 @@ const authStore = useAuthStore()
 
 const route = useRoute()
 
+const appStore = useAuthStore();
+
 const linksList = [
-  {
-    title: 'Dashboard',
-    icon: 'dashboard',
-    to: '/'
-  },
-  {
-    title: 'Clientes',
-    icon: 'dashboard',
-    to: '/clientes'
-  },
-  {
-    title: 'Contadores',
-    icon: 'dashboard',
-    to: '/contadores'
-  },
-  {
-    title: 'Ingresos',
-    icon: 'dashboard',
-    to: '/ingresos'
-  },
-  {
-    title: 'Reportes',
-    icon: 'dashboard',
-    to: '/reportes'
-  },
-  {
-    title: 'Gastos',
-    icon: 'dashboard',
-    to: '/gastos'
-  },
-  {
-    title: 'Ingresos',
-    icon: 'dashboard',
-    to: '/users'
-  },
-]
+  
+];
 
 const getTitleFromPath = (path) => {
   if (path == '/') return 'Dashboard'
@@ -126,10 +85,6 @@ const toggleLeftDrawer = () => {
 }
 
 const menuLinks = linksList
-
-const logout=()=>{
-  authStore.logout()
-}
 
 </script>
 

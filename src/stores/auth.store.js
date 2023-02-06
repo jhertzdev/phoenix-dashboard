@@ -43,7 +43,7 @@ export const useAuthStore = defineStore({
             this.userData = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            this.router.push('/login');
+            this.router.push('/logout');
         }
     }
 });
