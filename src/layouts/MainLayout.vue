@@ -119,6 +119,7 @@ const getTitleFromPath = (path) => {
   if (path == '/gastos') return 'Gastos'
   if (path == '/users') return 'Usuarios'
   if (path == '/login') return 'Inicio de sesión'
+  if (path == '/registro') return 'Registro de usuario'
   return 'Dashboard'
 }
 

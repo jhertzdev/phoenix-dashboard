@@ -39,6 +39,34 @@ export const useAuthStore = defineStore({
             }
 
         },
+        async register(userData) {
+            const appStore = useAppStore()
+            console.log(userData);
+            if (!userData.name || !userData.email || !userData.password || !userData.role_id) {
+                appStore.modalMessage = {
+                    title: 'Error',
+                    message: 'Todos los campos son requeridos.'
+                }
+                return;
+            }
+
+            userData.active = 1
+
+            try {
+                const response = await api.post('/register', userData)
+                appStore.modalMessage = {
+                    title: 'Genial',
+                    message: '¡Te has registrado correctamente! Ahora puedes iniciar sesión.'
+                }
+            } catch (error) {
+                console.log('Error', error);
+                appStore.modalMessage = {
+                    title: 'Error',
+                    message: 'Ha ocurrido un error. Vuelve a intentarlo.'
+                }
+            }
+            
+        },
         logout() {
             this.user = null;
             this.returnUrl = null;
