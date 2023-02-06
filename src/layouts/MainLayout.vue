@@ -104,11 +104,6 @@ const linksList = [
     to: '/gastos'
   },
   {
-    title: 'Usuarios',
-    icon: 'diversity_3',
-    to: '/users'
-  },
-  {
     title: 'Salir',
     icon: 'logout',
     to: '/logout'
