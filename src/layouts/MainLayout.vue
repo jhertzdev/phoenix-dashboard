@@ -10,10 +10,19 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
+        
 
         <q-toolbar-title>
           {{ getTitleFromPath(route.path) }}
         </q-toolbar-title>
+
+        <div v-if="authStore.user" class="right text-align-center">
+          <q-item clickable :to="'/perfil/'+authStore.user.id">
+            <q-avatar>
+              <img src="/avatar.png">
+            </q-avatar>
+          </q-item>
+        </div>
 
       </q-toolbar>
     </q-header>
@@ -34,11 +43,13 @@
           v-for="link in menuLinks"
           :key="link.title"
           v-bind="link"
+          v-show="authStore.user?.id ? true:false"
         />
         <MenuLink key="logLink" 
           :icon="authStore.user?.id ? 'logout' : 'login'" 
           :to="authStore.user?.id ? '/logout' : '/login'" 
           :title="authStore.user?.id ? 'Cerrar sesión' : 'Iniciar sesión' "
+          v-show="authStore.user?.id ? false:true"
         />
       </q-list>
     </q-drawer>
@@ -66,6 +77,36 @@ const linksList = [
     icon: 'dashboard',
     to: '/'
   },
+  {
+    title: 'Clientes',
+    icon: 'dashboard',
+    to: '/clientes'
+  },
+  {
+    title: 'Contadores',
+    icon: 'dashboard',
+    to: '/contadores'
+  },
+  {
+    title: 'Ingresos',
+    icon: 'dashboard',
+    to: '/ingresos'
+  },
+  {
+    title: 'Reportes',
+    icon: 'dashboard',
+    to: '/reportes'
+  },
+  {
+    title: 'Gastos',
+    icon: 'dashboard',
+    to: '/gastos'
+  },
+  {
+    title: 'Ingresos',
+    icon: 'dashboard',
+    to: '/users'
+  },
 ]
 
 const getTitleFromPath = (path) => {
@@ -82,4 +123,14 @@ const toggleLeftDrawer = () => {
 
 const menuLinks = linksList
 
+
 </script>
+
+<style>
+  .right{
+    float:right !important
+  }
+  .text-align-center{
+    text-align:center !important;
+  }
+</style>

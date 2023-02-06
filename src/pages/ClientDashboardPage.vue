@@ -1,8 +1,11 @@
 <template>
   <q-page class="flex column flex-center">
-    
-    <h1>{{$route.params.id}}</h1>
-   
+    <div class="user-avatar">
+      <q-icon name="face_6" />
+    </div>
+    <div v-if="authStore.user">
+      Bienvenido, <strong>{{ authStore.user.name }}</strong>
+    </div>
   </q-page>
 </template>
 

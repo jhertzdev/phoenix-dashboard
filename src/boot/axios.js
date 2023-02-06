@@ -1,7 +1,8 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
-const api = axios.create({ baseURL: 'https://excel.api.phoenixtechsa.com/api/' })
+const url_dev='https://excel.api.phoenixtechsa.com/api/' ;
+const api = axios.create({ baseURL:url_dev })
 
 if (localStorage.getItem('token')) {
   api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
@@ -19,4 +20,8 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 })
 
-export { axios, api }
+const ApiRest=function(url,config){
+  config.Authorization=`Bearer ${localStorage.getItem('token')}`;
+  return fetch(url,config).then(m=>m.json());
+}
+export { axios, api,ApiRest}
