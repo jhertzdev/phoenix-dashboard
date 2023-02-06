@@ -36,6 +36,15 @@
   font-weight: 600;
 }
 
+/* Avatar */
+.user-avatar{ 
+  color: var(--q-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 5rem;
+}
+
 /* Pages */
 h5.page-title {
   margin-top: 0.5rem;

@@ -8,7 +8,7 @@
     <template v-else>
       <div v-if="userData?.name" class="row justify-center full-width">
         <div class="col-12 col-sm-8 col-md-6">
-          <h5 class="page-title">Actualizar perfil</h5>
+          <h5 class="page-title">Perfil de <i>{{ userData?.name }}</i></h5>
           <q-form
             @submit="handleSubmitUpdateUser"
             class="q-gutter-md"
@@ -94,16 +94,18 @@ const route = useRoute()
 const availableRoles = ref(null)
 
 function fetchData() {
-  isLoading.value = true;
-  ApiRest('user/' + route.params.id, {})
-    .then(response => {
-      userData.value = response
-      updateData.value.name = response.name
-      updateData.value.email = response.email
 
+  
+  isLoading.value = true;
+  api.get('user/' + route.params.id)
+    .then(response => {
+      userData.value = response.data
+      updateData.value.name = response.data.name
+      updateData.value.email = response.data.email
+      
       // Obtener roles
-      ApiRest('roles?selected=1',{}).then(m => {
-        availableRoles.value = m.map( d => {
+      api.get('roles?selected=1').then(m => {
+        availableRoles.value = m.data.map( d => {
           return {
             value: d.id,
             label: d.name,
@@ -143,7 +145,9 @@ const handleSubmitUpdateUser = () => {
     if (response.data) {
       // Revisar errores
       if (response.data.error) {
+
         console.log(response.data);
+
       } else if (response.data.data) {
         userData.value = response.data.data
         $q.notify({
