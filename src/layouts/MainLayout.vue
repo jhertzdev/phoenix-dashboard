@@ -80,32 +80,32 @@ const linksList = [
   },
   {
     title: 'Clientes',
-    icon: 'dashboard',
+    icon: 'person',
     to: '/clientes'
   },
   {
     title: 'Contadores',
-    icon: 'dashboard',
+    icon: 'work',
     to: '/contadores'
   },
   {
     title: 'Ingresos',
-    icon: 'dashboard',
+    icon: 'trending_up',
     to: '/ingresos'
   },
   {
     title: 'Reportes',
-    icon: 'dashboard',
+    icon: 'data_usage',
     to: '/reportes'
   },
   {
     title: 'Gastos',
-    icon: 'dashboard',
+    icon: 'trending_down',
     to: '/gastos'
   },
   {
-    title: 'Ingresos',
-    icon: 'dashboard',
+    title: 'Usuarios',
+    icon: 'diversity_3',
     to: '/users'
   },
   {
@@ -117,6 +117,12 @@ const linksList = [
 
 const getTitleFromPath = (path) => {
   if (path == '/') return 'Dashboard'
+  if (path == '/clientes') return 'Clientes'
+  if (path == '/contadores') return 'Contadores'
+  if (path == '/ingresos') return 'Ingresos'
+  if (path == '/reportes') return 'Reportes'
+  if (path == '/gastos') return 'Gastos'
+  if (path == '/users') return 'Usuarios'
   if (path == '/login') return 'Inicio de sesión'
   return 'Dashboard'
 }
