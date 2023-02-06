@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        
+
 
         <q-toolbar-title>
           {{ getTitleFromPath(route.path) }}
@@ -72,6 +72,11 @@ const linksList = [
     title: 'Dashboard',
     icon: 'dashboard',
     to: '/'
+  },
+  {
+    title:'Usuarios',
+    icon:'groups',
+    to:'/users'
   },
   {
     title: 'Clientes',

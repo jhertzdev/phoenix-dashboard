@@ -31,15 +31,17 @@
               lazy-rules
               :rules="[ (val, rules) => rules.email(val) || 'Ingresa un e-mail válido.' ]"
             />
-            
-            <q-select
-              filled
-              square
-              v-model="updateData.role"
-              :options="availableRoles"
-              label="Rol de usuario"
-              :rules="[ val => val?.value > 0 || 'Selecciona un rol válido.' ]"
-            />
+
+            <!--
+              <q-select
+                filled
+                square
+                v-model="updateData.role"
+                :options="availableRoles"
+                label="Rol de usuario"
+                :rules="[ val => val?.value > 0 || 'Selecciona un rol válido.' ]"
+              />
+            -->
 
             <q-input
               filled
@@ -47,18 +49,18 @@
               type="password"
               v-model="updateData.password"
               label="Contraseña nueva"
-              bottom-slots            
+              bottom-slots
             >
               <template v-slot:hint>
                 Deja en blanco si no quieres cambiar la contraseña.
               </template>
             </q-input>
-    
+
           <div class="text-center q-mt-lg">
             <q-btn square label="Reestablecer" type="button" color="secondary" @click="handleResetForm" class="q-mr-sm" />
             <q-btn square label="Guardar" type="submit" color="primary" :loading="buttonLoading" />
           </div>
-  
+
           </q-form>
         </div>
       </div>
@@ -98,7 +100,7 @@ function fetchData() {
       userData.value = response
       updateData.value.name = response.name
       updateData.value.email = response.email
-      
+
       // Obtener roles
       ApiRest('roles?selected=1',{}).then(m => {
         availableRoles.value = m.map( d => {
@@ -155,7 +157,7 @@ const handleSubmitUpdateUser = () => {
     $q.notify({
       type: 'negative',
       message: 'Ha ocurrido un error. Vuelve a intentarlo más tarde.',
-    })  
+    })
   })
   .finally(() => buttonLoading.value = false)
 }
