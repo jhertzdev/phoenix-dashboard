@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/login'].includes(route.path)" elevated>
+    <q-header v-if="!['/login', '/registro'].includes(route.path)" elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -79,6 +79,11 @@ const linksList = [
     to:'/users'
   },
   {
+    title:'Categorías',
+    icon:'category',
+    to:'/categorias'
+  },
+  {
     title: 'Clientes',
     icon: 'person',
     to: '/clientes'
@@ -113,6 +118,7 @@ const linksList = [
 const getTitleFromPath = (path) => {
   if (path == '/') return 'Dashboard'
   if (path == '/clientes') return 'Clientes'
+  if (path == '/categorias') return 'Categorías'
   if (path == '/contadores') return 'Contadores'
   if (path == '/ingresos') return 'Ingresos'
   if (path == '/reportes') return 'Reportes'
