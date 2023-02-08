@@ -5,18 +5,26 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/DashboardPage.vue')},
+      // Clientes
       { path: 'clientes', component: () => import('pages/ClientDashboardPage.vue') },
+      // Categorías
       { path: 'categorias', component: () => import('pages/CategoriasPage.vue') },
+      // Contadores
       { path: 'contadores', component: () => import('pages/ContadorDashboard.vue') },
+      // Ingresos
       { path: 'ingresos', component: () => import('pages/IngresosDashboard.vue') },
+      { path: 'ingresos/new', component: () => import('pages/GastosDashboard.vue') },
+      // Reportes
       { path: 'reportes', component: () => import('pages/ReportDashboard.vue') },
+      // Gastos
       { path: 'gastos', component: () => import('pages/GastosDashboard.vue') },
+      { path: 'gastos/new', component: () => import('src/pages/GastosNewEditPage.vue') },
+      { path: 'gastos/:id', component: () => import('src/pages/GastosNewEditPage.vue'), props: true },
+      // Usuarios
       { path: 'users', component: () => import('pages/UsersDashboard.vue') },
-      { path: 'perfil/:id', component: () => import('pages/PefilDashboard.vue'),props: true },
-      
-
-      
-      //auth
+      // Perfil
+      { path: 'perfil/:id', component: () => import('pages/PefilDashboard.vue'), props: true },      
+      // Auth
       { path: 'login', component: () => import('pages/LoginPage.vue') },
       { path: 'registro', component: () => import('pages/RegisterPage.vue') },
       { path: 'logout', component: () => import('pages/LogoutPage.vue') },
