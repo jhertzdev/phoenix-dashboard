@@ -6,9 +6,9 @@
         v-if="isLoading"
     />
     <template v-else>
-      <div v-if="!gastoId || (gastoId && gastoData.reason)" class="row justify-center full-width">
+      <div v-if="!gastoId || (gastoId && gastoData.id)" class="row justify-center full-width">
         <div class="col-12 col-sm-8 col-md-6">
-          <h5 class="page-title" v-if="gastoData?.reason">Editar "{{ gastoData.reason }}"</h5>
+          <h5 class="page-title" v-if="gastoData?.id">Editar {{ gastoData.reason ? `"${gastoData.reason}"` : 'gasto'}}</h5>
           <h5 class="page-title" v-else>Crear nuevo gasto</h5>
           <q-form
             @submit="handleSubmitGasto"
@@ -35,11 +35,23 @@
             <q-select
               filled
               square
+              label="Usuario asignado"
+              v-model="updateData.user_id"
+              :options="availableUsers"
+              :loading="usersLoading"
+              @virtual-scroll="onUsersScroll"
+              v-if="authStore.user.role_name === 'contador'"
+              clearable
+            />
+            <q-select
+              filled
+              square
               label="Categoría"
               v-model="updateData.category"
               :options="availableCategories"
               :loading="categoriesLoading"
               @virtual-scroll="onCategoriesScroll"
+              clearable
             />
             <q-select
               filled
@@ -49,6 +61,7 @@
               :options="availableSubCategories"
               :loading="subCategoriesLoading"
               @virtual-scroll="onSubCategoriesScroll"
+              clearable
             />
             <div class="text-center q-mt-lg">
               <q-btn square label="Reestablecer" type="button" color="secondary" @click="handleResetForm" class="q-mr-sm" />
@@ -58,7 +71,7 @@
         </div>
       </div>
       <template v-else>
-        <p>{{ gastoId }} No se pudo cargar la información.</p>
+        <p>No se pudo cargar la información.</p>
         <q-btn color="primary" @click="fetchData">Volver a intentar</q-btn>
       </template>
     </template>
@@ -70,9 +83,11 @@ import { useRoute } from 'vue-router'
 import { ref, onMounted, nextTick } from 'vue'
 import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth.store';
 
 const $q = useQuasar()
 const route = useRoute()
+const authStore = useAuthStore()
 
 const gastoData = ref(null)
 
@@ -81,11 +96,51 @@ const updateData = ref({
   total: null,
   category: null,
   subCategory: null,
+  user_id: null,
 })
 
 const gastoId = route.params.id
 const isLoading = ref(!!gastoId)
 const buttonLoading = ref(false)
+
+// Usuarios:
+const usersLoading = ref(false)
+const availableUsers = ref([])
+const nextPageUsers = ref(1)
+const lastPageUsers = ref(0)
+
+const onUsersScroll = ({to, ref}) => {
+  const lastIndex = availableUsers.value.length - 1 
+  if (usersLoading.value !== true && nextPageUsers.value <= lastPageUsers.value && to === lastIndex) {
+    usersLoading.value = true
+    getUsers(nextPageUsers.value, ref)
+  }
+}
+
+function getUsers(pageId, ref = null) {
+  api.get('users?page=' + pageId)
+    .then(response => {        
+      availableUsers.value = [...availableUsers.value, ...response.data.data.map(user => {
+            return {
+              value: user.id,
+              label: `${user.name} (${user.email})`
+            }
+          }
+        )
+      ]
+      nextPageUsers.value++
+      lastPageUsers.value = response.data.pagination.lastPage
+
+      if (ref !== null) {
+        nextTick(() => {
+          ref.refresh()
+          usersLoading.value = false
+        })
+      }
+
+    })
+    .catch(e => console.log('Error', e))
+}
 
 // Categorías:
 const categoriesLoading = ref(false)
@@ -199,6 +254,9 @@ onMounted(() => {
   if (gastoId) fetchData()
   getCategorias(nextPageCategories.value)
   getSubCategorias(nextPageSubCategories.value)
+  if (authStore.user.role_name == 'contador') {
+    getUsers(nextPageUsers)
+  }
 })
 
 const handleSubmitGasto = () => {
@@ -211,6 +269,13 @@ const handleSubmitGasto = () => {
 
   if (updateData.value.category?.value) postData.categori_id = updateData.value.category.value
   if (updateData.value.subCategory?.value) postData.sub_categori_id = updateData.value.subCategory.value
+
+  if (authStore.user.role_name === 'contador') {
+    postData.contador_id = authStore.user.id
+    postData.user_id = updateData.value?.user_id?.value || null
+  } else {
+    postData.user_id = authStore.user.id
+  }
 
   // Actualizar gasto
   if (gastoId) {

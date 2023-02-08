@@ -15,12 +15,16 @@ export const useAuthStore = defineStore({
 
             try {
                 const response = await api.post('/login', { email, password })
+                const roles = await api.get('roles?selected=1')
 
-                if (response.data) {
+                if (response.data && roles.data) {
+
                     this.user = response.data.user;
+                    this.user.role_name = roles.data.find(role => role.id == this.user.role_id)?.name
                     this.token = response.data.token;
-                    localStorage.setItem('user', JSON.stringify(response.data.user))
-                    localStorage.setItem('token', response.data.token)
+
+                    localStorage.setItem('user', JSON.stringify(this.user))
+                    localStorage.setItem('token', this.token)
 
                     api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
