@@ -9,11 +9,10 @@
       <div class="q-gutter-xs q-mb-md">
         <q-btn size="sm" class="q-px-sm" color="primary" @click="handleClickNewCategory(1)" label="Ingreso" icon="add"/>
         <q-btn size="sm" class="q-px-sm" color="primary" @click="handleClickNewCategory(2)" label="Gasto" icon="add"/>
-        <!-- <q-btn size="sm" class="q-px-sm" color="primary" @click="handleClickFilterCategories" label="Filtrar" icon="filter_alt"/> -->
         <q-btn size="sm" class="q-px-sm" color="negative" @click="handleClickDeleteSelectedCategory(selectedCategory)" icon="delete" v-if="selectedCategory"/>
-        <!-- <q-btn size="sm" class="q-px-sm" color="secondary" @click="handleClickEditSelectedCategory" icon="edit" v-if="selectedCategory"/> -->
+        <q-btn size="sm" class="q-px-sm" color="secondary" @click="handleClickEditSelectedCategory(selectedCategory)" icon="edit" v-if="selectedCategory"/>
       </div>
-      <div class="categories-wrapper">
+      <div class="categories-wrapper" v-if="!filterOptions.name">
         <q-tree 
           :nodes="categories"
           v-model:selected="selectedCategory"
@@ -27,6 +26,19 @@
           </template>
         </q-tree>
       </div>
+      <div v-else>
+        <p>Resultados de "{{ filterOptions.name }}" en {{ filterOptions.nameType == 'categorias' ? 'categorías' : 'sub-categorías'}}:</p>
+        <q-tree 
+          :nodes="categories"
+          v-model:selected="selectedCategory"
+          node-key="key"
+          default-expand-all
+          no-nodes-label="No hay resultados disponibles." 
+        />
+      </div>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn fab icon="filter_alt" color="primary" @click="handleClickFilterCategories" />
+      </q-page-sticky>
       <div class="pagination-wrapper q-px-md q-pt-md flex flex-center">
         <q-pagination
           v-model="currentPage"
@@ -66,12 +78,20 @@
 import { ref, watch, onMounted } from 'vue'
 import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
+import DialogFiltros from 'src/components/DialogFiltros.vue';
+import { useRouter } from 'vue-router';
 
 const $q = useQuasar()
+const router = useRouter()
 
 const isLoading = ref(true)
 
 const selectedCategory = ref(null)
+const filterOptions = ref({
+  option: null,
+  name: null,
+  nameType: null,
+})
 
 const categories = ref([])
 
@@ -158,7 +178,31 @@ const handleClickNewCategory = (type, parentCategoryId = null) => {
 }
 
 const handleClickFilterCategories = () => {
-
+  $q.dialog({
+    component: DialogFiltros,
+    componentProps: {      
+      options: {
+        label: 'Tipo',
+        selected: filterOptions.value?.option,
+        items: [
+          { label: 'Ingreso', value: 1 },
+          { label: 'Gasto', value: 2 },
+          { label: 'Todos', value: null },
+        ],
+      },
+      queryName: filterOptions.value?.name,
+      queryType: filterOptions.value?.nameType,
+    },
+  }).onOk(data => {
+    currentPage.value = 1
+    filterOptions.value = data
+    console.log(filterOptions.value);
+    fetchCategories()
+  }).onCancel(() => { 
+    console.log('Cancel')
+  }).onDismiss(() => {
+    console.log('Called on OK or Cancel')
+  })
 }
 
 const handleClickDeleteSelectedCategory = (deleteKey) => {
@@ -167,13 +211,15 @@ const handleClickDeleteSelectedCategory = (deleteKey) => {
   let categoryIndex = -1;
   let category = categories.value.find(cat => cat.key === deleteKey)
 
+  console.log('Cate', category);
+
   if (category !== undefined) {
-    endpoint = 'categorias/'
+    endpoint = 'categorias'
   } else {
     categoryIndex = categories.value.findIndex(cat => cat.children?.some(subcat => subcat.key === deleteKey));
     if (categoryIndex > -1) {
       category = categories.value[categoryIndex].children.find(subcat => subcat.key === deleteKey)
-      endpoint = 'sub-categorias/'
+      endpoint = 'sub-categorias'
     }
   }
 
@@ -183,13 +229,15 @@ const handleClickDeleteSelectedCategory = (deleteKey) => {
       message: '¿Estás seguro de eliminar la categoría? Esta acción no se puede deshacer.',
       cancel: true,
     }).onOk(() => {
-      api.delete(endpoint + category.id)
+      // Sobrescribir endpoint si está definido en categoría (aplicando filtros de nombre)
+      let endpointDelete = category.endpoint || endpoint
+      api.delete(endpointDelete + '/' + category.id)
       .then(response => {
         if (response.data?.status === 200) {
 
-          if (endpoint == 'categorias/') {
+          if (endpoint == 'categorias') {
             categories.value = categories.value.filter(cat => cat.key !== deleteKey)
-          } else if (endpoint == 'sub-categorias/') {
+          } else if (endpoint == 'sub-categorias') {
             categories.value[categoryIndex].children = categories.value[categoryIndex].children.filter(subcat => subcat.key !== deleteKey)
           }
 
@@ -215,29 +263,44 @@ const handleClickDeleteSelectedCategory = (deleteKey) => {
 
 }
 
-const handleClickEditSelectedCategory = () => {
-  console.log('Editar categoría');
+const handleClickEditSelectedCategory = (categoryKey) => {
+  let categoryType, categoryId
+  [categoryType, categoryId] = categoryKey.split('-')
+  router.push(`categorias/${categoryType}/${categoryId}`);
 }
 
 watch(currentPage, () => {
   fetchCategories()
 })
 
-function fetchCategories() {
+function fetchCategories(options = null) {
   isLoading.value = true
-  api.get('categorias?page=' + currentPage.value).then(response => {
+
+  let baseUrl = filterOptions.value?.nameType || 'categorias'
+  let keyPrefix = filterOptions.value?.nameType ? filterOptions.value?.nameType.slice(0, 3) + '-' : 'cat-'
+  let endpoint = baseUrl + '?page=' + currentPage.value
+  
+  if (filterOptions.value?.option) { endpoint += '&tipo=' + filterOptions.value.option }
+  if (filterOptions.value?.name) { endpoint += '&name=' + filterOptions.value.name }
+
+  api.get(endpoint).then(response => {
     if (response.data?.data) {
       categories.value = response.data.data.map(cat => {
         let category = {
           label: cat.name,
-          key: 'cat-' + cat.id,
+          key: keyPrefix + cat.id,
           id: cat.id,
           icon: cat.tipo == 1 ? 'trending_up' : (cat.tipo == 2 ? 'trending_down' : 'stop'),
           iconColor: cat.tipo == 1 ? 'positive' : (cat.tipo == 2 ? 'negative' : 'primary'),
           type: cat.tipo,
-          subcategoriesPage: 1,
-          lazy: true
+          endpoint: baseUrl
         }
+
+        if (!filterOptions.value?.name) {
+          category.subcategoriesPage = 1,
+          category.lazy = true
+        }
+
         return category
       })
     }

@@ -99,14 +99,14 @@ const linksList = [
     to: '/ingresos'
   },
   {
-    title: 'Reportes',
-    icon: 'data_usage',
-    to: '/reportes'
-  },
-  {
     title: 'Gastos',
     icon: 'trending_down',
     to: '/gastos'
+  },
+  {
+    title: 'Reportes',
+    icon: 'data_usage',
+    to: '/reportes'
   },
   {
     title: 'Salir',
@@ -117,13 +117,13 @@ const linksList = [
 
 const getTitleFromPath = (path) => {
   if (path == '/') return 'Dashboard'
-  if (path == '/clientes') return 'Clientes'
-  if (path == '/categorias') return 'Categorías'
-  if (path == '/contadores') return 'Contadores'
-  if (path == '/ingresos') return 'Ingresos'
-  if (path == '/reportes') return 'Reportes'
-  if (path == '/gastos') return 'Gastos'
-  if (path == '/users') return 'Usuarios'
+  if (path == '/clientes' || path.startsWith('/clientes')) return 'Clientes'
+  if (path == '/categorias' || path.startsWith('/categorias')) return 'Categorías'
+  if (path == '/contadores' || path.startsWith('/contadores')) return 'Contadores'
+  if (path == '/ingresos' || path.startsWith('/ingresos')) return 'Ingresos'
+  if (path == '/reportes' || path.startsWith('/reportes')) return 'Reportes'
+  if (path == '/gastos' || path.startsWith('/gastos')) return 'Gastos'
+  if (path == '/users' || path.startsWith('/users')) return 'Usuarios'
   if (path == '/login') return 'Inicio de sesión'
   if (path == '/registro') return 'Registro de usuario'
   return 'Dashboard'

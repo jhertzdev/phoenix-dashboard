@@ -9,11 +9,13 @@ const routes = [
       { path: 'clientes', component: () => import('pages/ClientDashboardPage.vue') },
       // Categorías
       { path: 'categorias', component: () => import('pages/CategoriasPage.vue') },
+      { path: 'categorias/:type/:id', component: () => import('pages/CategoriasEditPage.vue') },
       // Contadores
       { path: 'contadores', component: () => import('pages/ContadorDashboard.vue') },
       // Ingresos
       { path: 'ingresos', component: () => import('pages/IngresosDashboard.vue') },
-      { path: 'ingresos/new', component: () => import('pages/GastosDashboard.vue') },
+      { path: 'ingresos/new', component: () => import('src/pages/IngresosNewEditPage.vue') },
+      { path: 'ingresos/:id', component: () => import('src/pages/IngresosNewEditPage.vue'), props: true },
       // Reportes
       { path: 'reportes', component: () => import('pages/ReportDashboard.vue') },
       // Gastos

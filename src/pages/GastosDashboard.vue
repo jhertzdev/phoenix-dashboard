@@ -52,7 +52,7 @@
         </q-item>
       </q-list>
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn fab icon="add" color="primary" to="/gastos/new" />
+        <q-btn fab icon="add" color="secondary" to="/gastos/new" />
       </q-page-sticky>
       <div class="q-pa-lg flex flex-center">
         <q-pagination
