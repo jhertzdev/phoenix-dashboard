@@ -27,18 +27,47 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
+  const canAccess = (to, user) => {
+    let currentPath
+    
+    if (to.matched?.length) {
+      currentPath = to.matched[to.matched.length - 1]?.path
+    }
+
+    // Rutas permitidas solo para ciertos roles
+    let allowedRoutes = [
+      {
+        path: '/contadores', roles: ['cliente']
+      },
+      {
+        path: '/clientes', roles: ['contador']
+      },
+    ]
+
+    let checkCurrentRoute = allowedRoutes.find(route => {
+      return currentPath === route.path
+    })
+
+    if (checkCurrentRoute && !checkCurrentRoute.roles.includes(user.role_name)) {
+      return false
+    }   
+
+    return true
+  }
+
   Router.beforeEach(async (to) => {
     // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login', '/registro'];
+    const publicPages = ['/login', '/registro', '/unauthorized'];
     const authRequired = !publicPages.includes(to.path);
     const auth = useAuthStore();
-
-    console.log(auth.user);
   
     if (authRequired && !auth.user) {
       auth.returnUrl = to.fullPath;
       return '/login';
+    } else if (authRequired && !canAccess(to, auth.user)) {
+      return '/unauthorized'
     }
+    
   });
 
   return Router

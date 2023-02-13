@@ -61,13 +61,12 @@ import { ref } from 'vue'
 import MenuLink from 'src/components/MenuLink.vue'
 import { useRoute } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
-import { useAppStore } from 'src/stores/app.store';
 
 const authStore = useAuthStore()
 
 const route = useRoute()
 
-const linksList = [
+const links = [
   {
     title: 'Dashboard',
     icon: 'dashboard',
@@ -86,12 +85,14 @@ const linksList = [
   {
     title: 'Clientes',
     icon: 'person',
-    to: '/clientes'
+    to: '/clientes',
+    allowedRoles: ['contador']
   },
   {
     title: 'Contadores',
     icon: 'work',
-    to: '/contadores'
+    to: '/contadores',
+    allowedRoles: ['cliente']
   },
   {
     title: 'Ingresos',
@@ -114,6 +115,12 @@ const linksList = [
     to: '/logout'
   }
 ]
+
+const linksList = []
+links.forEach(link => {
+  if (link.allowedRoles === undefined) linksList.push(link)
+  if (link.allowedRoles !== undefined && link.allowedRoles.includes(authStore.user?.role_name)) linksList.push(link)
+});
 
 const getTitleFromPath = (path) => {
   if (path == '/') return 'Dashboard'

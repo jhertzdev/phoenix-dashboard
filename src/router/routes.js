@@ -6,12 +6,12 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/DashboardPage.vue')},
       // Clientes
-      { path: 'clientes', component: () => import('pages/ClientDashboardPage.vue') },
+      { path: 'clientes', component: () => import('src/pages/ClientesContadoresPage.vue') },
       // Categorías
       { path: 'categorias', component: () => import('pages/CategoriasPage.vue') },
       { path: 'categorias/:type/:id', component: () => import('pages/CategoriasEditPage.vue') },
       // Contadores
-      { path: 'contadores', component: () => import('pages/ContadorDashboard.vue') },
+      { path: 'contadores', component: () => import('pages/ClientesContadoresPage.vue') },
       // Ingresos
       { path: 'ingresos', component: () => import('pages/IngresosDashboard.vue') },
       { path: 'ingresos/new', component: () => import('src/pages/IngresosNewEditPage.vue') },
@@ -32,6 +32,8 @@ const routes = [
       { path: 'logout', component: () => import('pages/LogoutPage.vue') },
     ]
   },
+
+  { path: '/unauthorized', component: () => import('pages/ErrorNotAuthorized.vue') },
 
   // Always leave this as last one,
   // but you can also remove it

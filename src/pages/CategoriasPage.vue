@@ -17,8 +17,6 @@
           :nodes="categories"
           v-model:selected="selectedCategory"
           node-key="key"
-          default-expand-all
-          @lazy-load="lazyLoadSubCategory"
           no-nodes-label="No hay categorías disponibles." 
         >
           <template v-slot:header-add-subcategory="prop">
@@ -32,9 +30,12 @@
           :nodes="categories"
           v-model:selected="selectedCategory"
           node-key="key"
-          default-expand-all
           no-nodes-label="No hay resultados disponibles." 
-        />
+        >
+          <template v-slot:header-add-subcategory="prop">
+            <q-btn size="sm" class="q-px-sm" @click="handleClickNewCategory(prop.node.type, prop.node.parentId)" color="primary" label="Agregar subcategoría" icon="add"/>
+          </template>
+        </q-tree>
       </div>
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn fab icon="filter_alt" color="primary" @click="handleClickFilterCategories" />
@@ -146,7 +147,14 @@ const handleClickNewCategory = (type, parentCategoryId = null) => {
         if (endpoint == 'categorias') {
           createdCategory.icon = response.data.data.tipo == 1 ? 'trending_up' : (response.data.data.tipo == 2 ? 'trending_down' : 'stop');
           createdCategory.iconColor = response.data.data.tipo == 1 ? 'positive' : (response.data.data.tipo == 2 ? 'negative' : 'primary');
-          createdCategory.lazy = true;
+          createdCategory.children = [
+            {
+              selectable: false,
+              type: response.data.data.tipo,
+              parentId: response.data.data.id,
+              header: 'add-subcategory',
+            }
+          ];
           categories.value.unshift(createdCategory)
         } else if (endpoint == 'sub-categorias') {
           let categoryIndex = categories.value.findIndex(cat => cat.id == parentCategoryId)
@@ -210,8 +218,6 @@ const handleClickDeleteSelectedCategory = (deleteKey) => {
   let endpoint;
   let categoryIndex = -1;
   let category = categories.value.find(cat => cat.key === deleteKey)
-
-  console.log('Cate', category);
 
   if (category !== undefined) {
     endpoint = 'categorias'
@@ -279,11 +285,13 @@ function fetchCategories(options = null) {
   let baseUrl = filterOptions.value?.nameType || 'categorias'
   let keyPrefix = filterOptions.value?.nameType ? filterOptions.value?.nameType.slice(0, 3) + '-' : 'cat-'
   let endpoint = baseUrl + '?page=' + currentPage.value
-  
+
+  if (baseUrl === 'categorias') { endpoint += '&with[]=sub_categories' }  
   if (filterOptions.value?.option) { endpoint += '&tipo=' + filterOptions.value.option }
   if (filterOptions.value?.name) { endpoint += '&name=' + filterOptions.value.name }
 
   api.get(endpoint).then(response => {
+
     if (response.data?.data) {
       categories.value = response.data.data.map(cat => {
         let category = {
@@ -296,51 +304,47 @@ function fetchCategories(options = null) {
           endpoint: baseUrl
         }
 
+        if (baseUrl == 'categorias') {
+          category.label += ` (${cat.sub_categories.length})`
+          category.children = []
+        }
+                
+        if (cat.sub_categories?.length) {
+          category.children = cat.sub_categories.map(subcat => {
+            let subcategory = {
+              label: subcat.name,
+              key: 'sub-' + subcat.id,
+              id: subcat.id,
+            }
+            return subcategory
+          }) 
+        }
+
+        if (baseUrl === 'categorias') {
+          category.children.push({
+            selectable: false,
+            type: cat.tipo,
+            parentId: cat.id,
+            header: 'add-subcategory',
+          })
+        }        
+
+        console.log('Childrensss', category.children);
+
         if (!filterOptions.value?.name) {
-          category.subcategoriesPage = 1,
-          category.lazy = true
+          category.subcategoriesPage = 1
         }
 
         return category
       })
     }
+
+    console.log(categories.value);
     if (response.data?.pagination) {
       maxPages.value = response.data.pagination.lastPage
     }
   }).finally(() => isLoading.value = false)
 }
-
-const lazyLoadSubCategory = ({ node, key, done, fail }) => {
-
-  api.get('sub-categorias?page=' + node.subcategoriesPage).then(response => {
-    if (response.data?.data) {
-
-      let subcategories = response.data.data.map(cat => {
-        let subcategory = {
-          label: cat.name,
-          key: 'sub-' + cat.id,
-          id: cat.id,
-        }
-        return subcategory
-      })      
-
-      subcategories.push({
-        selectable: false,
-        type: node.type,
-        parentId: node.id,
-        header: 'add-subcategory',
-      })
-
-      done(subcategories);
-
-    } else {
-
-      return fail()    
-
-    }
-  }).catch(e => fail())
-
-}    
 
 onMounted(() => { fetchCategories() })
 

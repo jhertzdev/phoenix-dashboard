@@ -6,7 +6,7 @@
       </div>
 
       <div class="text-h6 q-mt-lg" style="opacity:.4">
-        La página que buscas no existe.
+        No tienes permisos para acceder a esta página.
       </div>
 
       <q-btn
