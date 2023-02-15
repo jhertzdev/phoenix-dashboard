@@ -95,14 +95,19 @@ const links = [
     allowedRoles: ['cliente']
   },
   {
-    title: 'Ingresos',
-    icon: 'trending_up',
-    to: '/ingresos'
+    title: 'Bancos',
+    icon: 'account_balance',
+    to: '/bancos',
   },
   {
-    title: 'Gastos',
-    icon: 'trending_down',
-    to: '/gastos'
+    title: 'Cuentas',
+    icon: 'account_balance_wallet',
+    to: '/cuentas',
+  },
+  {
+    title: 'Movimientos',
+    icon: 'ssid_chart',
+    to: '/movimientos'
   },
   {
     title: 'Reportes',
@@ -127,9 +132,10 @@ const getTitleFromPath = (path) => {
   if (path == '/clientes' || path.startsWith('/clientes')) return 'Clientes'
   if (path == '/categorias' || path.startsWith('/categorias')) return 'Categorías'
   if (path == '/contadores' || path.startsWith('/contadores')) return 'Contadores'
-  if (path == '/ingresos' || path.startsWith('/ingresos')) return 'Ingresos'
+  if (path == '/bancos' || path.startsWith('/bancos')) return 'Bancos'
+  if (path == '/cuentas' || path.startsWith('/cuentas')) return 'Cuentas'
   if (path == '/reportes' || path.startsWith('/reportes')) return 'Reportes'
-  if (path == '/gastos' || path.startsWith('/gastos')) return 'Gastos'
+  if (path == '/movimientos' || path.startsWith('/movimientos')) return 'Movimientos'
   if (path == '/users' || path.startsWith('/users')) return 'Usuarios'
   if (path == '/login') return 'Inicio de sesión'
   if (path == '/registro') return 'Registro de usuario'

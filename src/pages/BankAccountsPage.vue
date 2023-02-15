@@ -3,34 +3,28 @@
     <q-spinner color="primary" size="3em" />
   </q-page>
   <template v-else>
-    <q-page class="flex column flex-center q-pa-md" v-if="!gastos.length">
+    <q-page class="flex column flex-center q-pa-md" v-if="!cuentas.length">
       <p>No se han encontrado datos.</p>
-      <q-btn color="primary" @click="retryFetchGastos">Volver a intentar</q-btn>
+      <q-btn color="primary" @click="retryFetchCuentas">Volver a intentar</q-btn>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn fab icon="add" color="secondary" to="/cuentas/new" />
+      </q-page-sticky>
     </q-page>
     <q-page class="flex column q-pa-md" v-else>
       <q-list bordered>
-        <q-item v-for="gasto in gastos" :key="gasto.id" class="q-my-sm">
+        <q-item v-for="cuenta in cuentas" :key="cuenta.id" class="q-my-sm">
   
           <q-item-section>
-            <q-item-label>{{ gasto.reason }}<i v-if="!gasto.reason">Sin descripción</i></q-item-label>
-            <q-item-label caption lines="1">
-              <ul v-if="gasto.categori_name">
-                <li>{{ gasto.categori_name }}</li>
-                <li v-if="gasto.sub_categori_name">{{ gasto.sub_categori_name }}</li>
-              </ul>  
+            <q-item-label>{{ cuenta.name }}</q-item-label>
+            <q-item-label caption>
+              {{  cuenta.description }}
             </q-item-label>
-          </q-item-section>
-
-          <q-item-section side top>
-            <q-item-label class="text-secondary text-weight-medium">${{ gasto.total.toFixed(2) }}</q-item-label>
-            <q-item-label caption>{{ gasto.created_at }}</q-item-label>
-          </q-item-section>
-          
+          </q-item-section>          
   
           <q-item-section side>
             <q-btn-dropdown color="primary" padding="xs">
               <q-list>
-                <q-item clickable v-close-popup :to="`/gastos/${gasto.id}`">
+                <q-item clickable v-close-popup :to="`/cuentas/${cuenta.id}`">
                   <q-item-section avatar>
                     <q-avatar icon="edit"/>
                   </q-item-section>
@@ -38,7 +32,7 @@
                     <q-item-label>Editar</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="handleDeleteGasto(gasto.id)">
+                <q-item clickable v-close-popup @click="handleDeleteCuenta(cuenta.id)">
                   <q-item-section avatar>
                     <q-avatar icon="delete"/>
                   </q-item-section>
@@ -52,7 +46,7 @@
         </q-item>
       </q-list>
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn fab icon="add" color="secondary" to="/gastos/new" />
+        <q-btn fab icon="add" color="secondary" to="/cuentas/new" />
       </q-page-sticky>
       <div class="q-pa-lg flex flex-center">
         <q-pagination
@@ -89,39 +83,39 @@ import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 
-const gastos = ref([])
+const cuentas = ref([])
 const isLoading = ref(true)
 
 const currentPage = ref(1)
 const maxPages = ref(0)
 
 watch(currentPage, () => {
-  fetchGastos()
+  fetchCuentas()
 })
 
-const retryFetchGastos = () => {
+const retryFetchCuentas = () => {
   if (currentPage.value !== 1) currentPage.value = 1
-  else fetchGastos()
+  else fetchCuentas()
 }
 
-function fetchGastos() {
+function fetchCuentas() {
   isLoading.value = true
-  api.get('gastos?page=' + currentPage.value).then(response => {
+  api.get('bank_account?page=' + currentPage.value).then(response => {
     console.log(response);
     if (response.data?.data) {
-      gastos.value = response.data.data
+      cuentas.value = response.data.data
 
-      let uniqueCategories = [...new Set(gastos.value.map(gasto => gasto.categori_id).filter(gasto => gasto > 0))]
-      let uniqueSubCategories = [...new Set(gastos.value.map(gasto => gasto.sub_categori_id).filter(gasto => gasto > 0))]
+      let uniqueCategories = [...new Set(cuentas.value.map(cuenta => cuenta.categori_id).filter(cuenta => cuenta > 0))]
+      let uniqueSubCategories = [...new Set(cuentas.value.map(cuenta => cuenta.sub_categori_id).filter(cuenta => cuenta > 0))]
 
       // Obtener categorías
       uniqueCategories.forEach(cat_id => {
         api.get('categorias/' + cat_id).then(response => {
-          gastos.value = gastos.value.map(gasto => {
-            if (gasto.categori_id === response.data.id) {
-              gasto.categori_name = response.data.name
+          cuentas.value = cuentas.value.map(cuenta => {
+            if (cuenta.categori_id === response.data.id) {
+              cuenta.categori_name = response.data.name
             }
-            return gasto
+            return cuenta
           })
         })
       });
@@ -129,11 +123,11 @@ function fetchGastos() {
       // Obtener subcategorías
       uniqueSubCategories.forEach(subcat_id => {
         api.get('sub-categorias/' + subcat_id).then(response => {
-          gastos.value = gastos.value.map(gasto => {
-            if (gasto.sub_categori_id === response.data.id) {
-              gasto.sub_categori_name = response.data.name
+          cuentas.value = cuentas.value.map(cuenta => {
+            if (cuenta.sub_categori_id === response.data.id) {
+              cuenta.sub_categori_name = response.data.name
             }
-            return gasto
+            return cuenta
           })
         })
       });
@@ -145,29 +139,29 @@ function fetchGastos() {
   }).finally(() => isLoading.value = false)
 }
 
-const handleDeleteGasto = gastoId => {
+const handleDeleteCuenta = cuentaId => {
   
-  let gasto = gastos.value.find(gasto => gasto.id === gastoId)
+  let cuenta = cuentas.value.find(cuenta => cuenta.id === cuentaId)
   
-  if (gasto !== undefined) {
+  if (cuenta !== undefined) {
     $q.dialog({
-      title: 'Eliminar gasto',
-      message: `¿Estás seguro de eliminar ${gasto.reason ? '"' + gasto.reason + '"' : 'este gasto' }? Esta acción no se puede deshacer.`,
+      title: 'Eliminar cuenta',
+      message: `¿Estás seguro de eliminar ${cuenta.name ? '"' + cuenta.name + '"' : 'este cuenta' }? Esta acción no se puede deshacer.`,
       cancel: true,
     }).onOk(() => {
-      api.delete('gastos/' + gastoId)
+      api.delete('bank_account/' + cuentaId)
       .then(response => {
         if (response.data?.status === 200) {
-          gastos.value = gastos.value.filter(gasto => gasto.id !== gastoId)
+          cuentas.value = cuentas.value.filter(cuenta => cuenta.id !== cuentaId)
           $q.notify({
             type: 'positive',
-            message: 'Gasto eliminado.',
+            message: 'Cuenta eliminada.',
           })
         } else {
           console.log(response.data);
             $q.notify({
             type: 'negative',
-            message: 'No se pudo eliminar el gasto.',
+            message: 'No se pudo eliminar la cuenta.',
           })
         }
       })
@@ -175,11 +169,11 @@ const handleDeleteGasto = gastoId => {
   } else {
     $q.notify({
       type: 'negative',
-      message: 'No se encuentra el gasto seleccionado.',
+      message: 'No se encuentra la cuenta seleccionada.',
     })
   }
 }
 
-onMounted(() => { fetchGastos() })
+onMounted(() => { fetchCuentas() })
 
 </script>

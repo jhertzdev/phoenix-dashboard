@@ -6,12 +6,12 @@
         v-if="isLoading"
     />
     <template v-else>
-      <div v-if="!gastoId || (gastoId && gastoData.id)" class="row justify-center full-width">
+      <div v-if="!movimientoId || (movimientoId && movimientoData.id)" class="row justify-center full-width">
         <div class="col-12 col-sm-8 col-md-6">
-          <h5 class="page-title" v-if="gastoData?.id">Editar {{ gastoData.reason ? `"${gastoData.reason}"` : 'gasto'}}</h5>
-          <h5 class="page-title" v-else>Crear nuevo gasto</h5>
+          <h5 class="page-title" v-if="movimientoData?.id">Editar {{ movimientoData.reason ? `"${movimientoData.reason}"` : 'movimiento'}}</h5>
+          <h5 class="page-title" v-else>Crear nuevo movimiento</h5>
           <q-form
-            @submit="handleSubmitGasto"
+            @submit="handleSubmitMovimiento"
             class="q-gutter-md"
           >
             <q-input
@@ -35,12 +35,19 @@
             <q-select
               filled
               square
-              label="Usuario asignado"
-              v-model="updateData.user_id"
-              :options="availableUsers"
-              :loading="usersLoading"
-              @virtual-scroll="onUsersScroll"
-              v-if="authStore.user.role_name === 'contador'"
+              label="Cuenta"
+              v-model="updateData.account"
+              :options="availableAccounts"
+              :loading="accountsLoading"
+              @virtual-scroll="onAccountsScroll"
+              clearable
+            />
+            <q-select
+              filled
+              square
+              label="Tipo"
+              v-model="updateData.tipo"
+              :options="tiposCategoria"
               clearable
             />
             <q-select
@@ -89,52 +96,65 @@ const $q = useQuasar()
 const route = useRoute()
 const authStore = useAuthStore()
 
-const gastoData = ref(null)
+const movimientoData = ref(null)
 
 const updateData = ref({
   reason: null,
   total: null,
+  tipo: null,
   category: null,
   subCategory: null,
+  account: null,
   user_id: null,
 })
 
-const gastoId = route.params.id
-const isLoading = ref(!!gastoId)
+const tiposCategoria = [
+  {
+    label: 'Ingreso',
+    value: 1,
+  },
+  {
+    label: 'Gasto',
+    value: 2
+  }
+]
+
+const movimientoId = route.params.id
+const isLoading = ref(!!movimientoId)
 const buttonLoading = ref(false)
 
-// Usuarios:
-const usersLoading = ref(false)
-const availableUsers = ref([])
-const nextPageUsers = ref(1)
-const lastPageUsers = ref(0)
+// Cuentas:
+const accountsLoading = ref(false)
+const availableAccounts = ref([])
+const nextPageAccounts = ref(1)
+const lastPageAccounts = ref(0)
 
-const onUsersScroll = ({to, ref}) => {
-  const lastIndex = availableUsers.value.length - 1 
-  if (usersLoading.value !== true && nextPageUsers.value <= lastPageUsers.value && to === lastIndex) {
-    usersLoading.value = true
-    getUsers(nextPageUsers.value, ref)
+const onAccountsScroll = ({to, ref}) => {
+  const lastIndex = availableAccounts.value.length - 1 
+  if (accountsLoading.value !== true && nextPageAccounts.value <= lastPageAccounts.value && to === lastIndex) {
+    accountsLoading.value = true
+    getAccounts(nextPageAccounts.value, ref)
   }
 }
 
-function getUsers(pageId, ref = null) {
-  api.get('users?page=' + pageId)
-    .then(response => {        
-      availableUsers.value = [...availableUsers.value, ...response.data.data.map(user => {
+function getAccounts(pageId, ref = null) {
+  api.get('bank_account?page=' + pageId)
+    .then(response => {
+      availableAccounts.value = [...availableAccounts.value, ...response.data.data.map(acc => {
             return {
-              value: user.id,
-              label: `${user.name} (${user.email})`
+              value: acc.id,
+              label: acc.name
             }
           }
         )
       ]
-      nextPageUsers.value++
-      lastPageUsers.value = response.data.pagination.lastPage
+      nextPageAccounts.value++
+      lastPageAccounts.value = response.data.pagination.lastPage
 
       if (ref !== null) {
         nextTick(() => {
           ref.refresh()
-          usersLoading.value = false
+          accountsLoading.value = false
         })
       }
 
@@ -222,25 +242,40 @@ function getSubCategorias(pageId, ref = null) {
 
 function fetchData() {  
   isLoading.value = true;
-  api.get('gastos/' + gastoId)
+  api.get('movimiento/' + movimientoId)
     .then(response => {
-      gastoData.value = response.data
+      movimientoData.value = response.data
       updateData.value.reason = response.data.reason
       updateData.value.total = response.data.total
+      if ([1, 2].includes(response.data?.tipo)) {
+        updateData.value.tipo = {
+          label: tiposCategoria.find(tipo => tipo.value === response.data.tipo)?.label,
+          value: response.data.tipo
+        }
+      }
+      if (response.data.account_id) {
+        api.get('bank_account/' + response.data.account_id).then(response2 => {
+          movimientoData.value.accountName = response2.data?.name || response.data.account_id
+          updateData.value.account = {
+            label: movimientoData.value.accountName,
+            value: response2.data?.id || response.data.account_id
+          }
+        })
+      }
       if (response.data.categori_id) {
         api.get('categorias/' + response.data.categori_id).then(response2 => {
-          gastoData.value.categoryName = response2.data?.name || response.data.categori_id
+          movimientoData.value.categoryName = response2.data?.name || response.data.categori_id
           updateData.value.category = {
-            label: gastoData.value.categoryName,
+            label: movimientoData.value.categoryName,
             value: response2.data?.id || response.data.categori_id
           }
         })
       }
       if (response.data.sub_categori_id) {
         api.get('sub-categorias/' + response.data.sub_categori_id).then(response2 => {
-          gastoData.value.subCategoryName = response2.data?.name || response.data.sub_categori_id
+          movimientoData.value.subCategoryName = response2.data?.name || response.data.sub_categori_id
           updateData.value.subCategory = {
-            label: gastoData.value.subCategoryName,
+            label: movimientoData.value.subCategoryName,
             value: response2.data?.id || response.data.sub_categori_id
           }
         })
@@ -251,22 +286,22 @@ function fetchData() {
 }
 
 onMounted(() => {
-  if (gastoId) fetchData()
+  if (movimientoId) fetchData()
   getCategorias(nextPageCategories.value)
   getSubCategorias(nextPageSubCategories.value)
-  if (authStore.user.role_name == 'contador') {
-    getUsers(nextPageUsers)
-  }
+  getAccounts(nextPageAccounts.value)
 })
 
-const handleSubmitGasto = () => {
+const handleSubmitMovimiento = () => {
   buttonLoading.value = true
 
   let postData = {
     reason: updateData.value.reason,
-    total: updateData.value.total
+    total: updateData.value.total,
+    tipo: updateData.value.tipo?.value,
   }
 
+  if (updateData.value.account?.value) postData.account_id = updateData.value.account.value
   if (updateData.value.category?.value) postData.categori_id = updateData.value.category.value
   if (updateData.value.subCategory?.value) postData.sub_categori_id = updateData.value.subCategory.value
 
@@ -277,12 +312,12 @@ const handleSubmitGasto = () => {
     postData.user_id = authStore.user.id
   }
 
-  // Actualizar gasto
-  if (gastoId) {
+  // Actualizar movimiento
+  if (movimientoId) {
     console.log('Actualizar', postData);
-    api.put('gastos/' + gastoId, postData).then(response => {
+    api.put('movimiento/' + movimientoId, postData).then(response => {
       if (response.data?.status == 200) {
-        gastoData.value = response.data?.data
+        movimientoData.value = response.data?.data
         $q.notify({
           type: 'positive',
           message: 'Actualizado exitosamente.',
@@ -304,7 +339,7 @@ const handleSubmitGasto = () => {
     .finally(() => buttonLoading.value = false)
   // Crear nuevo
   } else {
-    api.post('gastos', postData).then(response => {
+    api.post('movimientos', postData).then(response => {
       if (response.data?.status == 200) {
         $q.notify({
           type: 'positive',
@@ -332,19 +367,34 @@ const handleSubmitGasto = () => {
 
 
 const handleResetForm = () => {
-  updateData.value.reason = gastoData.value?.reason || null
-  updateData.value.total = gastoData.value?.total || null
-  if (gastoData.value?.categori_id) {
+  updateData.value.reason = movimientoData.value?.reason || null
+  updateData.value.total = movimientoData.value?.total || null
+
+  if ([1, 2].includes(movimientoData.value?.tipo)) {
+    updateData.value.tipo = {
+      label: tiposCategoria.find(tipo => tipo.value === movimientoData.value.tipo)?.label,
+      value: movimientoData.value.tipo
+    }
+  } else { updateData.value.tipo = null }
+
+  if (movimientoData.value?.account_id) {
+    updateData.value.account = {
+      label: movimientoData.value.accountName || movimientoData.value.account_id,
+      value: movimientoData.value.account_id,
+    }
+  } else { updateData.value.account = null }
+
+  if (movimientoData.value?.categori_id) {
     updateData.value.category = {
-      label: gastoData.value.categoryName || gastoData.value.categori_id,
-      value: gastoData.value.categori_id,
+      label: movimientoData.value.categoryName || movimientoData.value.categori_id,
+      value: movimientoData.value.categori_id,
     }
   } else { updateData.value.category = null }
 
-  if (gastoData.value?.sub_categori_id) {
+  if (movimientoData.value?.sub_categori_id) {
     updateData.value.subCategory = {
-      label: gastoData.value.subCategoryName || gastoData.value.sub_categori_id,
-      value: gastoData.value.sub_categori_id,
+      label: movimientoData.value.subCategoryName || movimientoData.value.sub_categori_id,
+      value: movimientoData.value.sub_categori_id,
     }
   } else { updateData.value.subCategory = null }
   

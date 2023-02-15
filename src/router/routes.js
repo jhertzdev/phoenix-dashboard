@@ -12,16 +12,17 @@ const routes = [
       { path: 'categorias/:type/:id', component: () => import('pages/CategoriasEditPage.vue') },
       // Contadores
       { path: 'contadores', component: () => import('pages/ClientesContadoresPage.vue') },
-      // Ingresos
-      { path: 'ingresos', component: () => import('pages/IngresosDashboard.vue') },
-      { path: 'ingresos/new', component: () => import('src/pages/IngresosNewEditPage.vue') },
-      { path: 'ingresos/:id', component: () => import('src/pages/IngresosNewEditPage.vue'), props: true },
+      // Cuentas y bancos
+      { path: 'bancos', component: () => import('src/pages/BanksPage.vue') },
+      { path: 'cuentas', component: () => import('src/pages/BankAccountsPage.vue') },
+      { path: 'cuentas/new', component: () => import('src/pages/BankAccountsNewEditPage.vue') },
+      { path: 'cuentas/:id', component: () => import('src/pages/BankAccountsNewEditPage.vue'), props: true },
+      // Movimientos
+      { path: 'movimientos', component: () => import('pages/MovimientosDashboard.vue') },
+      { path: 'movimientos/new', component: () => import('src/pages/MovimientosNewEditPage.vue') },
+      { path: 'movimientos/:id', component: () => import('src/pages/MovimientosNewEditPage.vue'), props: true },
       // Reportes
       { path: 'reportes', component: () => import('pages/ReportDashboard.vue') },
-      // Gastos
-      { path: 'gastos', component: () => import('pages/GastosDashboard.vue') },
-      { path: 'gastos/new', component: () => import('src/pages/GastosNewEditPage.vue') },
-      { path: 'gastos/:id', component: () => import('src/pages/GastosNewEditPage.vue'), props: true },
       // Usuarios
       { path: 'users', component: () => import('pages/UsersDashboard.vue') },
       // Perfil
