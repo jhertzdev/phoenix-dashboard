@@ -18,7 +18,9 @@
               square
               type="text"
               v-model="updateData.name"
-              label="Nombre"
+              :rules="[ val => val && val.length > 0 || 'Ingresa un nombre.' ]"
+              hint="Ingresa un nombre."
+              label="Nombre *"
             />
             <q-input
               filled
@@ -26,6 +28,7 @@
               type="text"
               v-model="updateData.description"
               label="Descripción"
+              hint="Ingresa una descripción (opcional)."
               autogrow
             />
             <q-input
@@ -33,11 +36,11 @@
               square
               type="number"
               v-model.number="updateData.saldo"              
-              label="Saldo inicial"
+              label="Saldo inicial *"
               prefix="$"
               lazy-rules
               :rules="[ val => val > 0 || 'Ingresa un valor válido.' ]"
-              hint="Ingresa un valor numérico"
+              hint="Ingresa un valor numérico."
             />
             <q-select
               filled
@@ -53,11 +56,13 @@
             <q-select
               filled
               square
-              label="Banco"
+              label="Banco *"
               v-model="updateData.bank"
               :options="availableBanks"
               :loading="banksLoading"
               @virtual-scroll="onBanksScroll"
+              :rules="[ val => val && val.value > 0 || 'Selecciona un banco.' ]"
+              hint="Selecciona un banco."
               clearable
             />
             <div class="text-center q-mt-lg">

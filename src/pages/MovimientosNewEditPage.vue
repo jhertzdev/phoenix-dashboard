@@ -20,13 +20,14 @@
               type="text"
               v-model="updateData.reason"
               label="Descripción"
+              hint="Ingresa una descripción (opcional)"
             />
             <q-input
               filled
               square
               type="number"
               v-model.number="updateData.total"              
-              label="Total"
+              label="Total *"
               prefix="$"
               lazy-rules
               :rules="[ val => val > 0 || 'Ingresa un valor válido.' ]"
@@ -35,19 +36,23 @@
             <q-select
               filled
               square
-              label="Cuenta"
+              label="Cuenta *"
               v-model="updateData.account"
               :options="availableAccounts"
               :loading="accountsLoading"
               @virtual-scroll="onAccountsScroll"
+              :rules="[ val => val && val.value > 0 || 'Selecciona una cuenta.' ]"
+              hint="Selecciona una cuenta."
               clearable
             />
             <q-select
               filled
               square
-              label="Tipo"
+              label="Tipo *"
               v-model="updateData.tipo"
               :options="tiposCategoria"
+              :rules="[ val => val && val.value > 0 || 'Selecciona el tipo de movimiento.' ]"
+              hint="Selecciona el tipo de movimiento."
               clearable
             />
             <q-select
@@ -58,6 +63,8 @@
               :options="availableCategories"
               :loading="categoriesLoading"
               @virtual-scroll="onCategoriesScroll"
+              @clear="updateData.subCategory = null"
+              hint="Selecciona una categoría (opcional)."
               clearable
             />
             <q-select
@@ -67,7 +74,9 @@
               v-model="updateData.subCategory"
               :options="availableSubCategories"
               :loading="subCategoriesLoading"
+              :disable="!updateData.category"
               @virtual-scroll="onSubCategoriesScroll"
+              hint="Selecciona una sub-categoría (opcional)."
               clearable
             />
             <div class="text-center q-mt-lg">
