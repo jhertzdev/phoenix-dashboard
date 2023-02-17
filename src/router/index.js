@@ -34,8 +34,14 @@ export default route(function (/* { store, ssrContext } */) {
       currentPath = to.matched[to.matched.length - 1]?.path
     }
 
+    // Evitar acceder a perfiles de otros usuarios
+    if (currentPath === '/perfil/:id' && to.params.id != user.id) return false
+
     // Rutas permitidas solo para ciertos roles
     let allowedRoutes = [
+      {
+        path: '/users', roles: ['admin']
+      },
       {
         path: '/contadores', roles: ['cliente']
       },

@@ -11,10 +11,21 @@ export const useAuthStore = defineStore({
         returnUrl: null,
     }),
     actions: {
-        async login(email, password) {
+        async login(email, password, showWelcome = false) {
+
+            const appStore = useAppStore()
 
             try {
+
                 const response = await api.post('/login', { email, password })
+
+                if (showWelcome) {
+                    appStore.modalMessage = {
+                        title: '¡Bienvenido!',
+                        message: 'Te has registrado exitosamente. Redireccionando...'
+                    }
+                }
+                
                 const roles = await api.get('roles?selected=1')
 
                 if (response.data && roles.data) {
@@ -35,7 +46,6 @@ export const useAuthStore = defineStore({
                 return true
 
             } catch (error) {
-                const appStore = useAppStore()
                 appStore.modalMessage = {
                     title: 'Error',
                     message: 'Las credenciales no son válidas.'
@@ -58,10 +68,7 @@ export const useAuthStore = defineStore({
 
             try {
                 const response = await api.post('/register', userData)
-                appStore.modalMessage = {
-                    title: 'Genial',
-                    message: '¡Te has registrado correctamente! Ahora puedes iniciar sesión.'
-                }
+                this.login(userData.email, userData.password, true)
             } catch (error) {
                 console.log('Error', error);
                 appStore.modalMessage = {

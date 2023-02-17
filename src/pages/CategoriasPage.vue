@@ -166,10 +166,21 @@ const handleClickNewCategory = (type, parentCategoryId = null) => {
           message: 'Categoría creada.',
         })
       } else {
-        $q.notify({
-          type: 'negative',
-          message: 'No se pudo crear la categoría.',
-        })
+        
+        // Chequear si fue duplicado
+        if (response.data?.message?.includes('1062 Duplicate entry')) {
+          $q.notify({
+            type: 'negative',
+            message: 'La categoría ya existe.',
+          })
+        } else {
+          $q.notify({
+            type: 'negative',
+            message: 'No se pudo crear la categoría.',
+          })
+        }
+
+        
       }
     })
     .catch(e => {
@@ -328,8 +339,6 @@ function fetchCategories(options = null) {
             header: 'add-subcategory',
           })
         }        
-
-        console.log('Childrensss', category.children);
 
         if (!filterOptions.value?.name) {
           category.subcategoriesPage = 1

@@ -69,7 +69,8 @@ const links = [
   {
     title:'Usuarios',
     icon:'groups',
-    to:'/users'
+    to:'/users',
+    allowedRoles: ['admin']
   },
   {
     title:'Categorías',
