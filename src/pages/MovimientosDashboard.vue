@@ -6,6 +6,9 @@
     <q-page class="flex column flex-center q-pa-md" v-if="!movimientos.length">
       <p>No se han encontrado datos.</p>
       <q-btn color="primary" @click="retryFetchMovimientos">Volver a intentar</q-btn>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn fab icon="add" color="secondary" to="/movimientos/new" />
+      </q-page-sticky>
     </q-page>
     <q-page class="flex column q-pa-md" v-else>
       <q-list bordered>

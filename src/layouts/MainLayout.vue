@@ -10,12 +10,9 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-
         <q-toolbar-title>
           {{ getTitleFromPath(route.path) }}
         </q-toolbar-title>
-
         <div v-if="authStore.user" class="right text-align-center">
           <q-item clickable :to="'/perfil/'+authStore.user.id">
             <q-avatar>
@@ -23,10 +20,8 @@
             </q-avatar>
           </q-item>
         </div>
-
       </q-toolbar>
     </q-header>
-
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
@@ -47,9 +42,7 @@
           v-show="!!authStore.user?.id"
         />
       </q-list>
-
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>

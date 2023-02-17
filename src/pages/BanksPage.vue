@@ -6,6 +6,9 @@
     <q-page class="flex column flex-center q-pa-md" v-if="!bancos.length">
       <p>No se han encontrado datos.</p>
       <q-btn color="primary" @click="retryFetchBancos">Volver a intentar</q-btn>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn fab icon="add" color="secondary" @click="handleCreateBanco" />
+      </q-page-sticky>
     </q-page>
     <q-page class="flex column q-pa-md" v-else>
       <q-list bordered>

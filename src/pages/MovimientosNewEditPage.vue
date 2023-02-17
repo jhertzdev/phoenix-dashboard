@@ -339,7 +339,8 @@ const handleSubmitMovimiento = () => {
     .finally(() => buttonLoading.value = false)
   // Crear nuevo
   } else {
-    api.post('movimientos', postData).then(response => {
+    api.post('movimiento', postData).then(response => {
+      console.log(response.data);
       if (response.data?.status == 200) {
         $q.notify({
           type: 'positive',
