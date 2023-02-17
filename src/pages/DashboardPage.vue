@@ -44,9 +44,6 @@
                   <BarChart />
                 </q-card-section>
               </q-expansion-item>
-
-
-
             </q-card>
           </div>
           <div class="col-12 col-lg-4">
