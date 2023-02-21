@@ -202,6 +202,8 @@ const filterDays = ref(7)
 
 const movimientos = reactive([])
 
+const cuentas = reactive([])
+
 function getMovimientos() {
   api.get('movimientos?with[]=account&page=' + currentPage.value.movimientos).then(response => {
     if (response.data?.data) {
@@ -234,6 +236,10 @@ function fetchDashboard() {
       balances.total = response.data.data.reduce((acc, balance) => {
         return balance.saldo + acc
       }, 0)
+
+      response.data.data.forEach(cuenta => {
+        cuentas.push(cuenta)
+      });
     }
   })
 
@@ -268,6 +274,7 @@ const columns = [
     format: val => `${val}`,
     sortable: true
   },
+  { name: 'balance_total', align: 'center', label: 'Balance total', field: 'balance_total', sortable: true },
   { name: 'ingresos_totales', align: 'center', label: 'Ingresos totales', field: 'ingresos_totales', sortable: true },
   //{ name: 'ult_ingreso', label: 'Últ. ingreso', field: 'ult_ingreso' },
   { name: 'gastos_totales', label: 'Gastos totales', field: 'gastos_totales', sortable: true },
@@ -290,6 +297,7 @@ const rows = computed(() => {
         name: account_name,
         ingresos_totales: movimiento.tipo === 1 ? total : 0,
         gastos_totales: movimiento.tipo === 2 ? total : 0,
+        balance_total: cuentas.find(cuenta => cuenta.id === movimiento.account_id)?.saldo || '-',
       };
     }
   });
