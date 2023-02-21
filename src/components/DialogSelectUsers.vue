@@ -30,7 +30,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useDialogPluginComponent } from 'quasar'
 import { api } from 'src/boot/axios';
 
-const props = defineProps(['title', 'message'])
+const props = defineProps(['title', 'message', 'filters'])
 
 const userId = ref(null)
 
@@ -49,7 +49,12 @@ const onUsersScroll = ({ to, ref }) => {
 }
 
 function getUsers(pageId, ref = null) {
-  api.get('users?page=' + pageId)
+  let endpoint = 'users?page=' + pageId
+  if (props.filters?.roleId) {
+    endpoint += '&role_id=' + props.filters.roleId
+  }
+  console.log(endpoint);
+  api.get(endpoint)
     .then(response => {
       availableUsers.value = [...availableUsers.value, ...response.data.data.map(user => {
         return {
@@ -71,7 +76,7 @@ function getUsers(pageId, ref = null) {
 }
 
 onMounted(() => {
-  getUsers(nextPageUsers)
+  getUsers(nextPageUsers.value)
 })
 
 defineEmits([

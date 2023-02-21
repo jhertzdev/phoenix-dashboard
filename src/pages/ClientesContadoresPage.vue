@@ -139,7 +139,10 @@ const handleClickSolicitar = () => {
   
   $q.dialog({
     component: DialogSelectUsers,
-    componentProps: {      
+    componentProps: {  
+      filters: {
+        roleId: authStore.user?.role_name == 'contador' ? 2 : 3
+      },
       title: 'Enviar solicitud',
       message
     },
