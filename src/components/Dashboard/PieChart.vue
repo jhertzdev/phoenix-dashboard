@@ -42,8 +42,6 @@ const chartData = computed(() => {
     dataValues.push(elem.total);
   });
 
-  console.log('Hey', labels);
-
   return {
     labels: labels,
     datasets: [

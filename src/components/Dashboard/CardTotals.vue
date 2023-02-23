@@ -7,14 +7,14 @@
       <q-item-section>
         <q-item-label>{{ props.title }}</q-item-label>
         <q-item-label caption v-if="!$q.screen.lt.lg">
-          <q-skeleton type="QBadge" v-if="props.total === null"/>
+          <q-skeleton type="QBadge" v-if="props.total === null || typeof(props.total) === 'undefined'"/>
           <span v-else>{{ props.total ? `$${parseFloat(props.total).toFixed(2)}` : '$0.00' }}</span>
         </q-item-label>
       </q-item-section>
     </q-item>
     <q-item v-if="$q.screen.lt.lg" style="min-height: 0">
       <q-item-section>
-        <q-skeleton type="QBadge" class="q-mx-auto" v-if="props.total === null"/>
+        <q-skeleton type="QBadge" class="q-mx-auto" v-if="props.total === null || typeof(props.total) === 'undefined'"/>
         <q-item-label class="text-center text-weight-bold" v-else>
           {{ props.total ? `$${parseFloat(props.total).toFixed(2)}` : '$0.00' }}
         </q-item-label>

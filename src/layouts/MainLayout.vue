@@ -2,45 +2,29 @@
   <q-layout view="lHh Lpr lFf">
     <q-header v-if="!['/login', '/registro'].includes(route.path)" elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-toolbar-title>
           {{ getTitleFromPath(route.path) }}
         </q-toolbar-title>
-        <div v-if="authStore.user" class="right text-align-center">
-          <q-item clickable :to="'/perfil/'+authStore.user.id">
-            <q-avatar>
-              <img src="/avatar.png">
-            </q-avatar>
-          </q-item>
-        </div>
+        <template v-if="authStore.user">
+          
+          <div class="right text-align-center">
+            <q-item clickable :to="'/perfil/' + authStore.user.id" class="q-px-sm">
+              <q-avatar>
+                <img src="/avatar.png">
+              </q-avatar>
+            </q-item>
+          </div>
+        </template>
       </q-toolbar>
     </q-header>
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      v-if="!['/login', '/registro'].includes(route.path)"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-if="!['/login', '/registro'].includes(route.path)">
       <q-list>
-        <q-item-label
-          header
-        >
+        <q-item-label header>
           Menú
         </q-item-label>
 
-        <MenuLink
-          v-for="link in menuLinks"
-          :key="link.title"
-          v-bind="link"
-          v-show="!!authStore.user?.id"
-        />
+        <MenuLink v-for="link in menuLinks" :key="link.title" v-bind="link" v-show="!!authStore.user?.id" />
       </q-list>
     </q-drawer>
     <q-page-container>
@@ -67,15 +51,15 @@ const links = [
     to: '/'
   },
   {
-    title:'Usuarios',
-    icon:'groups',
-    to:'/users',
+    title: 'Usuarios',
+    icon: 'groups',
+    to: '/users',
     allowedRoles: ['admin']
   },
   {
-    title:'Categorías',
-    icon:'category',
-    to:'/categorias'
+    title: 'Categorías',
+    icon: 'category',
+    to: '/categorias'
   },
   {
     title: 'Clientes',
@@ -148,10 +132,11 @@ const menuLinks = linksList
 </script>
 
 <style>
-  .right{
-    float:right !important
-  }
-  .text-align-center{
-    text-align:center !important;
-  }
+.right {
+  float: right !important
+}
+
+.text-align-center {
+  text-align: center !important;
+}
 </style>

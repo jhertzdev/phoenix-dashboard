@@ -20,6 +20,7 @@ const routes = [
       // Movimientos
       { path: 'movimientos', component: () => import('pages/MovimientosDashboard.vue') },
       { path: 'movimientos/new', component: () => import('src/pages/MovimientosNewEditPage.vue') },
+      { path: 'movimientos/importar', component: () => import('src/pages/MovimientosImportarPage.vue') },
       { path: 'movimientos/:id', component: () => import('src/pages/MovimientosNewEditPage.vue'), props: true },
       // Reportes
       { path: 'reportes', component: () => import('pages/ReportDashboard.vue') },

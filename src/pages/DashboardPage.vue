@@ -4,13 +4,13 @@
       <div class="col-12 col-lg-8">
         <div class="row q-pa-md" :class="$q.screen.lt.lg || 'q-col-gutter-md '">
           <div class="col-4">
-            <CardTotals class="" title="Balance total" :total="balances.total" icon="account_balance_wallet" />
+            <CardTotals class="" title="Balance total" :total="dashboardData?.balance" icon="account_balance_wallet" />
           </div>
           <div class="col-4">
-            <CardTotals class="" title="Ingresos totales" :total="balances.ingresos" icon="trending_up" />
+            <CardTotals class="" title="Ingresos totales" :total="dashboardData?.total_ingresos" icon="trending_up" />
           </div>
           <div class="col-4">
-            <CardTotals class="" title="Gastos totales" :total="balances.gastos" icon="trending_down" />
+            <CardTotals class="" title="Gastos totales" :total="dashboardData?.total_gastos" icon="trending_down" />
           </div>
         </div>
         <div class="row q-col-gutter-md q-px-md">
@@ -26,9 +26,12 @@
                 </q-card-section>
                 <q-card-section>
                   <q-btn-group unelevated>
-                    <q-btn size="sm" :color="filterDays === 7 ? 'primary' : 'orange-2'" :text-color="filterDays !== 7 && 'secondary'" label="7D" @click="filterDays = 7" />
-                    <q-btn size="sm" :color="filterDays === 15 ? 'primary' : 'orange-2'" :text-color="filterDays !== 15 && 'secondary'" label="15D" @click="filterDays = 15" />
-                    <q-btn size="sm" :color="filterDays === 30 ? 'primary' : 'orange-2'" :text-color="filterDays !== 30 && 'secondary'" label="30D" @click="filterDays = 30" />
+                    <q-btn size="sm" :color="filterDays === 7 ? 'primary' : 'orange-2'"
+                      :text-color="filterDays !== 7 && 'secondary'" label="7D" @click="filterDays = 7" />
+                    <q-btn size="sm" :color="filterDays === 15 ? 'primary' : 'orange-2'"
+                      :text-color="filterDays !== 15 && 'secondary'" label="15D" @click="filterDays = 15" />
+                    <q-btn size="sm" :color="filterDays === 30 ? 'primary' : 'orange-2'"
+                      :text-color="filterDays !== 30 && 'secondary'" label="30D" @click="filterDays = 30" />
                   </q-btn-group>
                 </q-card-section>
               </q-card-section>
@@ -55,36 +58,39 @@
               <q-expansion-item v-model="expanded.gastos">
                 <q-separator />
                 <q-card-section>
-                  <PieChart :data="movimientos.filter(mov => mov.tipo === 2)"/>
+                  <PieChart :data="movimientos.filter(mov => mov.tipo === 2)" />
                 </q-card-section>
-                <!--<q-card-section>
+                <q-card-section>
                   <div class="row q-col-gutter-sm">
                     <div class="col">
                       <q-item-section>
                         <q-item-label>Hoy</q-item-label>
-                        <q-item-label caption>
-                          $12,34
+                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.dia) === 'undefined'"/>
+                        <q-item-label caption v-else>
+                          ${{ dashboardData?.movimientos_por_fecha.dia.toFixed(2) }}
                         </q-item-label>
                       </q-item-section>
                     </div>
-                    <div class="col">
+                    <div class="col" hidden>
                       <q-item-section>
                         <q-item-label>Semana</q-item-label>
-                        <q-item-label caption>
-                          $123,45
+                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.semana) === 'undefined'"/>
+                        <q-item-label caption v-else>
+                          ${{ dashboardData?.movimientos_por_fecha.semana.toFixed(2) }}
                         </q-item-label>
                       </q-item-section>
                     </div>
                     <div class="col">
                       <q-item-section>
                         <q-item-label>Mes</q-item-label>
-                        <q-item-label caption>
-                          $1.234,50
+                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.mes) === 'undefined'"/>
+                        <q-item-label caption v-else>
+                          ${{ dashboardData?.movimientos_por_fecha.mes.toFixed(2) }}
                         </q-item-label>
                       </q-item-section>
                     </div>
                   </div>
-                </q-card-section>-->
+                </q-card-section>
               </q-expansion-item>
             </q-card>
           </div>
@@ -92,7 +98,9 @@
         <div class="row q-col-gutter-md q-pa-md">
           <div class="col-12">
             <q-card flat bordered>
-              <q-table title="Mis cuentas" :rows="rows" :columns="columns" row-key="name" />
+              <q-table title="Mis cuentas" :rows="dashboardData?.banks" :columns="columns" row-key="name"
+                no-data-label="No hay cuentas disponibles."
+              />
             </q-card>
           </div>
         </div>
@@ -128,7 +136,8 @@
               <q-expansion-item v-model="expanded.movimientos">
                 <q-separator />
                 <q-list>
-                  <q-item v-for="movimiento in movimientos.slice(0, 10)" :key="movimiento.id" class="q-my-sm" clickable v-ripple>
+                  <q-item v-for="movimiento in dashboardData?.ultimos_movimientos" :key="movimiento.id" class="q-my-sm" clickable
+                    v-ripple>
                     <q-item-section avatar>
                       <q-avatar icon="trending_down" text-color="negative" v-if="movimiento.id % 2" />
                       <q-avatar icon="trending_up" text-color="positive" v-else />
@@ -141,6 +150,9 @@
                       <q-badge color="secondary">{{ movimiento.account.name }}</q-badge>
                       {{ movimiento.created_at }}
                     </q-item-section>
+                  </q-item>
+                  <q-item v-if="!dashboardData?.ultimos_movimientos">
+                    <q-item-label class="q-mt-sm" caption>No hay movimientos.</q-item-label>
                   </q-item>
                 </q-list>
               </q-expansion-item>
@@ -204,6 +216,8 @@ const movimientos = reactive([])
 
 const cuentas = reactive([])
 
+const dashboardData = ref(null)
+
 function getMovimientos() {
   api.get('movimientos?with[]=account&page=' + currentPage.value.movimientos).then(response => {
     if (response.data?.data) {
@@ -230,6 +244,15 @@ function getMovimientos() {
 
 
 function fetchDashboard() {
+
+  api.get('dashboard')
+    .then(response => {
+      if (response.data?.data) {
+        dashboardData.value = response.data.data
+        console.log(dashboardData.value);
+      }
+    })
+    .catch(e => console.log(e))
 
   api.get('bank_account?page=1').then(response => {
     if (response.data?.data) {
@@ -274,42 +297,11 @@ const columns = [
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'balance_total', align: 'center', label: 'Balance total', field: 'balance_total', sortable: true },
-  { name: 'ingresos_totales', align: 'center', label: 'Ingresos totales', field: 'ingresos_totales', sortable: true },
+  { name: 'saldo', align: 'center', label: 'Balance total', field: 'saldo', sortable: true },
+  { name: 'ingresos', align: 'center', label: 'Ingresos totales', field: 'ingresos', sortable: true },
   //{ name: 'ult_ingreso', label: 'Últ. ingreso', field: 'ult_ingreso' },
-  { name: 'gastos_totales', label: 'Gastos totales', field: 'gastos_totales', sortable: true },
+  { name: 'gastos', label: 'Gastos totales', field: 'gastos', sortable: true },
   //{ name: 'ult_gasto', label: 'Últ. gasto', field: 'ult_gasto' },
 ]
-
-const rows = computed(() => {
-
-  const data = {}
-
-  movimientos.forEach((movimiento) => {
-    const account_id = movimiento.account_id;
-    const account_name = movimiento.account.name;
-    const total = movimiento.total;
-    if (data[account_id]) {
-      if (movimiento.tipo === 1) data[account_id].ingresos_totales += total;
-      if (movimiento.tipo === 2) data[account_id].gastos_totales += total;
-    } else {
-      data[account_id] = {
-        name: account_name,
-        ingresos_totales: movimiento.tipo === 1 ? total : 0,
-        gastos_totales: movimiento.tipo === 2 ? total : 0,
-        balance_total: cuentas.find(cuenta => cuenta.id === movimiento.account_id)?.saldo || '-',
-      };
-    }
-  });
-
-  const rowsData = []
-
-  Object.values(data).forEach((elem) => {
-    rowsData.push(elem);
-  });
-
-  return rowsData
-
-})
 
 </script>

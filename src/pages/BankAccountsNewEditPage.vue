@@ -211,7 +211,7 @@ onMounted(() => {
   if (cuentaId) fetchData()
   getBancos(nextPageBanks.value)
   if (authStore.user.role_name == 'contador') {
-    getUsers(nextPageUsers)
+    getUsers(nextPageUsers.value)
   }
 })
 

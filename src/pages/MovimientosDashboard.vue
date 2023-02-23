@@ -6,9 +6,16 @@
     <q-page class="flex column flex-center q-pa-md" v-if="!movimientos.length">
       <p>No se han encontrado datos.</p>
       <q-btn color="primary" @click="retryFetchMovimientos">Volver a intentar</q-btn>
+
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn fab icon="add" color="secondary" to="/movimientos/new" />
+        <q-fab color="secondary" icon="keyboard_arrow_up" direction="up" vertical-actions-align="right">
+          <q-fab-action label="Importar desde archivo" color="secondary" icon="upload" to="/movimientos/importar" external-label label-position="left"/>
+          <q-fab-action label="Nuevo movimiento" color="secondary" icon="add" to="/movimientos/new" external-label label-position="left"/>
+        </q-fab>
       </q-page-sticky>
+
+
+      
     </q-page>
     <q-page class="flex column q-pa-md" v-else>
       <q-list bordered>
@@ -64,7 +71,10 @@
         </q-item>
       </q-list>
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn fab icon="add" color="secondary" to="/movimientos/new" />
+        <q-fab color="secondary" icon="keyboard_arrow_up" direction="up" vertical-actions-align="right">
+          <q-fab-action label="Importar desde archivo" color="secondary" icon="upload" to="/movimientos/importar" external-label label-position="left"/>
+          <q-fab-action label="Nuevo movimiento" color="secondary" icon="add" to="/movimientos/new" external-label label-position="left"/>
+        </q-fab>
       </q-page-sticky>
       <div class="q-pa-lg flex flex-center">
         <q-pagination
