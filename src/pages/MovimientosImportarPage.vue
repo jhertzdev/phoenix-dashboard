@@ -1,80 +1,86 @@
 <template>
   <q-page class="flex column q-pa-md flex-center">
 
-    <q-stepper v-model="step" ref="stepper" color="primary" animated class="full-width" :contracted="$q.screen.lt.sm">
-      <q-step :name="1" title="Importar" icon="upload" active-icon="upload" :done="step > 1" class="q-pa-sm">
-        <p>Agrega un archivo para importarlo (formatos permitidos: .CSV, .XLS o .XLSX)</p>
-        <q-file filled v-model="selectedFile" label="Selecciona un archivo..." @update:model-value="handleFileAsync">
-          <template v-slot:prepend>
-            <q-icon name="cloud_upload" />
+    <div class="row full-width">
+      <div class="col-12 col-sm-8 offset-sm-2">
+        <q-stepper v-model="step" ref="stepper" color="primary" animated class="full-width" :contracted="$q.screen.lt.sm">
+          <q-step :name="1" title="Importar" icon="upload" active-icon="upload" :done="step > 1" class="q-pa-sm">
+            <p>Agrega un archivo para importarlo (formatos permitidos: .CSV, .XLS o .XLSX)</p>
+            <q-file filled v-model="selectedFile" label="Selecciona un archivo..." @update:model-value="handleFileAsync">
+              <template v-slot:prepend>
+                <q-icon name="cloud_upload" />
+              </template>
+            </q-file>
+    
+            <q-checkbox v-model="includeHeaders" label="El archivo contiene encabezados" class="q-mt-md"
+              @update:model-value="convertUploadedFile" />
+          </q-step>
+    
+          <q-step :name="2" title="Datos" icon="table_chart" active-icon="table_chart" :done="step > 2" class="q-pa-sm">
+    
+            <q-select v-model="selectedSheet" :options="Object.keys(workBook || {})" label="Selecciona una hoja" stack-label
+              class="q-mb-md" @update:model-value="checkColumns" />
+    
+            <table class="full-width text-left">
+              <thead>
+                <tr>
+                  <th style="width:50%">Columna en archivo</th>
+                  <th style="width:50%">Campo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(example, header) in workBook && workBook[selectedSheet] && workBook[selectedSheet][0] || []">
+                  <td class="q-pb-sm">
+                    {{ header }}
+                    <br>
+                    <span class="text-caption text-weight-light text-grey-5">Ejemplo: {{ example }}</span>
+                  </td>
+                  <td>
+                    <q-select v-model="columns[header]" :options="options" label="Selecciona un campo" clearable stack-label>
+                      <template v-slot:selected>
+                        <template v-if="columns[header]">
+                          {{ columns[header].label }}
+                        </template>
+                        <template v-else>
+                          -- Ignorar --
+                        </template>
+                      </template>
+                    </q-select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    
+          </q-step>
+    
+          <q-step :name="3" title="Asignar" icon="people" active-icon="people" :done="step > 3" class="q-pa-sm">
+    
+            <q-select class="q-mb-md" filled square label="Contador (opcional)" v-model="insertData.user" :options="availableUsers"
+              :loading="usersLoading" @virtual-scroll="onUsersScroll"
+              hint="Selecciona un contador."
+              clearable v-if="authStore.user.role_name === 'contador'"/>
+    
+            <q-select filled square label="Cuenta *" v-model="insertData.account" :options="availableAccounts"
+              :loading="accountsLoading" @virtual-scroll="onAccountsScroll"
+              :rules="[val => val && val.value > 0 || 'Selecciona una cuenta.']" hint="Selecciona una cuenta." clearable />
+    
+          </q-step>
+    
+          <template v-slot:navigation>
+            <q-stepper-navigation>
+              <q-btn @click="$refs.stepper.next()" v-if="step !== 3" color="primary" label="Continuar"
+                :disable="step === 1 && !selectedFile" />
+              <q-btn @click="handleImport" v-else color="primary" label="Importar"
+                :disable="step === 3 && (!insertData.account || !insertData.user)" :loading="isLoadingData" />
+              <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Atrás" class="q-ml-sm" />
+            </q-stepper-navigation>
           </template>
-        </q-file>
+    
+        </q-stepper>
+      </div>
+    </div>
 
-        <q-checkbox v-model="includeHeaders" label="El archivo contiene encabezados" class="q-mt-md"
-          @update:model-value="convertUploadedFile" />
-      </q-step>
 
-      <q-step :name="2" title="Datos" icon="table_chart" active-icon="table_chart" :done="step > 2" class="q-pa-sm">
-
-        <q-select v-model="selectedSheet" :options="Object.keys(workBook || {})" label="Selecciona una hoja" stack-label
-          class="q-mb-md" @update:model-value="checkColumns" />
-
-        <table class="full-width text-left">
-          <thead>
-            <tr>
-              <th style="width:50%">Columna en archivo</th>
-              <th style="width:50%">Campo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(example, header) in workBook && workBook[selectedSheet] && workBook[selectedSheet][0] || []">
-              <td class="q-pb-sm">
-                {{ header }}
-                <br>
-                <span class="text-caption text-weight-light text-grey-5">Ejemplo: {{ example }}</span>
-              </td>
-              <td>
-                <q-select v-model="columns[header]" :options="options" label="Selecciona un campo" clearable stack-label>
-                  <template v-slot:selected>
-                    <template v-if="columns[header]">
-                      {{ columns[header].label }}
-                    </template>
-                    <template v-else>
-                      -- Ignorar --
-                    </template>
-                  </template>
-                </q-select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-      </q-step>
-
-      <q-step :name="3" title="Asignar" icon="people" active-icon="people" :done="step > 3" class="q-pa-sm">
-
-        <q-select class="q-mb-md" filled square label="Contador *" v-model="insertData.user" :options="availableUsers"
-          :loading="usersLoading" @virtual-scroll="onUsersScroll"
-          :rules="[val => val && val.value > 0 || 'Selecciona un contador.']" hint="Selecciona un contador."
-          clearable />
-
-        <q-select filled square label="Cuenta *" v-model="insertData.account" :options="availableAccounts"
-          :loading="accountsLoading" @virtual-scroll="onAccountsScroll"
-          :rules="[val => val && val.value > 0 || 'Selecciona una cuenta.']" hint="Selecciona una cuenta." clearable />
-
-      </q-step>
-
-      <template v-slot:navigation>
-        <q-stepper-navigation>
-          <q-btn @click="$refs.stepper.next()" v-if="step !== 3" color="primary" label="Continuar"
-            :disable="step === 1 && !selectedFile" />
-          <q-btn @click="handleImport" v-else color="primary" label="Importar"
-            :disable="step === 3 && (!insertData.account || !insertData.user)" :loading="isLoadingData" />
-          <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Atrás" class="q-ml-sm" />
-        </q-stepper-navigation>
-      </template>
-
-    </q-stepper>
 
   </q-page>
 </template>

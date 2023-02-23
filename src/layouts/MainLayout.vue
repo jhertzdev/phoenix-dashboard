@@ -7,7 +7,35 @@
           {{ getTitleFromPath(route.path) }}
         </q-toolbar-title>
         <template v-if="authStore.user">
-          
+          <div class="right text-align-center" style="position:relative">
+            <q-btn-dropdown color="white" icon="notifications" flat size="md" dense>
+              <q-list style="width: 300px; max-width: 100%;">
+                <q-item v-for="notification in appStore.notifications">
+                  <q-item-section>
+                    <q-item-label>{{ notification.titulo }}</q-item-label>
+                    <q-item-label caption>{{ notification.body }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section side top>
+                    <q-item-label caption>{{ helpers.timeAgo(notification.created_at) }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item>
+                  <q-item-section class="q-py-sm">
+                    <q-btn label="Marcar todas como leídas." color="primary"/>
+                  </q-item-section>
+                </q-item>
+                <q-item v-if="!appStore.notifications.length">
+                  <q-item-section>
+                    <q-item-label class="q-py-md text-center text-caption">No hay notificaciones por leer.</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+            <q-badge color="secondary" rounded v-if="appStore.notifications.length" floating>
+              {{ appStore.notifications.length }}
+            </q-badge>
+          </div>
           <div class="right text-align-center">
             <q-item clickable :to="'/perfil/' + authStore.user.id" class="q-px-sm">
               <q-avatar>
@@ -39,8 +67,11 @@ import { ref } from 'vue'
 import MenuLink from 'src/components/MenuLink.vue'
 import { useRoute } from 'vue-router';
 import { useAuthStore } from 'src/stores/auth.store';
+import { useAppStore } from 'src/stores/app.store';
+import helpers from '../helpers/app.js'
 
 const authStore = useAuthStore()
+const appStore = useAppStore()
 
 const route = useRoute()
 
@@ -138,5 +169,9 @@ const menuLinks = linksList
 
 .text-align-center {
   text-align: center !important;
+}
+
+.q-header .q-btn-dropdown__arrow {
+  display: none;
 }
 </style>

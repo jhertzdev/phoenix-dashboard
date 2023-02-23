@@ -4,5 +4,6 @@ export const useAppStore = defineStore('app', {
   state: () => ({
     modalMessage: null,
     modalIsVisible: false,
+    notifications: []
   }),
 })

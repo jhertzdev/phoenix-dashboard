@@ -1,6 +1,8 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth.store'
+import { useAppStore } from 'src/stores/app.store'
+import { api } from 'src/boot/axios';
 import routes from './routes'
 
 /*
@@ -68,12 +70,21 @@ export default route(function (/* { store, ssrContext } */) {
     const publicPages = ['/login', '/registro', '/unauthorized', '/reportes'];
     const authRequired = !publicPages.includes(to.path);
     const auth = useAuthStore();
+    const appStore = useAppStore()
   
     if (authRequired && !auth.user) {
       auth.returnUrl = to.fullPath;
       return '/login';
     } else if (authRequired && !canAccess(to, auth.user)) {
       return '/unauthorized'
+    }
+
+    if (authRequired && auth.user) {
+      api.get('notify').then(response => {
+        if (response.data?.data) {
+          appStore.notifications = response.data.data 
+        }
+      })
     }
     
   });
