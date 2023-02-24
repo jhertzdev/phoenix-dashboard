@@ -1,0 +1,7 @@
+{
+  "appId": "com.phoenix.dashboard",
+  "appName": "Phoenix Tech Dashboard",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}

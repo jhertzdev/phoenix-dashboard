@@ -41,9 +41,17 @@ export const useAuthStore = defineStore({
 
                     // redirect to previous url or default to Dashboard
                     this.router.push(this.returnUrl || '/');
+                    return true
+
+                } else {
+
+                    appStore.modalMessage = {
+                        title: 'Error',
+                        message: 'Las credenciales no son válidas.'
+                    }
+                    
                 }
 
-                return true
 
             } catch (error) {
                 appStore.modalMessage = {
