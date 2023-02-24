@@ -1,15 +1,13 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin">
-
       <q-card-section class="q-dialog__title" v-if="props.title">
         {{ props.title }}
       </q-card-section>
-
       <q-card-section class="q-dialog__message" v-if="props.message">
         {{ props.message }}
       </q-card-section>
-
+      
       <template v-if="props.options">
         <q-card-section class="q-dialog-plugin__form">
           <div class="text-subtitle2" v-if="props.options.label">{{ props.options.label}}</div>
