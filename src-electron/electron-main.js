@@ -45,7 +45,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  mainWindow.setMenuBarVisibility(false)
+  mainWindow.setMenuBarVisibility(false) 
 }
 
 app.whenReady().then(createWindow)
