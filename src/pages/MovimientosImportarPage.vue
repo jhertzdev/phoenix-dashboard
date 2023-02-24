@@ -71,7 +71,7 @@
               <q-btn @click="$refs.stepper.next()" v-if="step !== 3" color="primary" label="Continuar"
                 :disable="step === 1 && !selectedFile" />
               <q-btn @click="handleImport" v-else color="primary" label="Importar"
-                :disable="step === 3 && (!insertData.account || !insertData.user)" :loading="isLoadingData" />
+                :disable="step === 3 && !insertData.account" :loading="isLoadingData" />
               <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Atrás" class="q-ml-sm" />
             </q-stepper-navigation>
           </template>
