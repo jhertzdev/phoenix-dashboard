@@ -20,12 +20,12 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item>
+                <q-item v-if="appStore.notifications.length">
                   <q-item-section class="q-py-sm">
                     <q-btn label="Marcar todas como leídas." color="primary"/>
                   </q-item-section>
                 </q-item>
-                <q-item v-if="!appStore.notifications.length">
+                <q-item v-else>
                   <q-item-section>
                     <q-item-label class="q-py-md text-center text-caption">No hay notificaciones por leer.</q-item-label>
                   </q-item-section>
@@ -39,7 +39,7 @@
           <div class="right text-align-center">
             <q-item clickable :to="'/perfil/' + authStore.user.id" class="q-px-sm">
               <q-avatar>
-                <img src="/avatar.png">
+                <img src="avatar.png">
               </q-avatar>
             </q-item>
           </div>

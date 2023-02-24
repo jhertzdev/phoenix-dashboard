@@ -297,10 +297,10 @@ const columns = [
     format: val => `${val}`,
     sortable: true
   },
-  { name: 'saldo', align: 'center', label: 'Balance total', field: 'saldo', sortable: true },
-  { name: 'ingresos', align: 'center', label: 'Ingresos totales', field: 'ingresos', sortable: true },
+  { name: 'saldo', align: 'center', label: 'Balance total', field: 'saldo', sortable: true, format: val => `$${val.toFixed(2)}` },
+  { name: 'ingresos', align: 'center', label: 'Ingresos totales', field: 'ingresos', sortable: true, format: val => `$${val.toFixed(2)}` },
   //{ name: 'ult_ingreso', label: 'Últ. ingreso', field: 'ult_ingreso' },
-  { name: 'gastos', label: 'Gastos totales', field: 'gastos', sortable: true },
+  { name: 'gastos', label: 'Gastos totales', field: 'gastos', sortable: true, format: val => `$${val.toFixed(2)}` },
   //{ name: 'ult_gasto', label: 'Últ. gasto', field: 'ult_gasto' },
 ]
 
