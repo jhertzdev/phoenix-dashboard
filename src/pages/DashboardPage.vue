@@ -58,7 +58,7 @@
               <q-expansion-item v-model="expanded.gastos">
                 <q-separator />
                 <q-card-section>
-                  <PieChart :data="movimientos.filter(mov => mov.tipo === 2)" />
+                  <PieChart :data="dashboardData?.banks || []" />
                 </q-card-section>
                 <q-card-section>
                   <div class="row q-col-gutter-sm">

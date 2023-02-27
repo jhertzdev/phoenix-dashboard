@@ -29,8 +29,7 @@
           <q-item-section>
             <q-item-label>{{ movimiento.reason }}<i v-if="!movimiento.reason">Sin descripción</i></q-item-label>
             <q-item-label>
-              <q-skeleton type="QBadge" v-if="!movimiento.account_name"/>
-              <q-badge color="secondary" v-else>{{ movimiento.account_name }}</q-badge>
+              <q-badge color="secondary" v-if="movimiento.account?.name">{{ movimiento.account.name }}</q-badge>
             </q-item-label>
             <q-item-label caption lines="1">
               <ul v-if="movimiento.categori_name">
@@ -128,32 +127,25 @@ const retryFetchMovimientos = () => {
 
 function fetchMovimientos() {
   isLoading.value = true
-  api.get('movimientos?page=' + currentPage.value).then(response => {
+  api.get('movimientos?page=' + currentPage.value + '&with[]=account').then(response => {
     if (response.data?.data) {
+
+      console.log(response.data.data);
       movimientos.value = response.data.data
 
       let uniqueCategories = [...new Set(movimientos.value.map(movimiento => movimiento.categori_id).filter(movimiento => movimiento > 0))]
-      let uniqueSubCategories = [...new Set(movimientos.value.map(movimiento => movimiento.sub_categori_id).filter(movimiento => movimiento > 0))]
-      let uniqueAccounts = [...new Set(movimientos.value.map(movimiento => movimiento.account_id).filter(movimiento => movimiento > 0))]
-
-      // Obtener cuentas
-      uniqueAccounts.forEach(cat_id => {
-        api.get('bank_account/' + cat_id).then(response => {
-          movimientos.value = movimientos.value.map(movimiento => {
-            if (movimiento.account_id === response.data.id) {
-              movimiento.account_name = response.data.name
-            }
-            return movimiento
-          })
-        })
-      });
-
+      
       // Obtener categorías
       uniqueCategories.forEach(cat_id => {
-        api.get('categorias/' + cat_id).then(response => {
+        api.get('categorias/' + cat_id + '?with[]=sub_categories').then(response => {
+
           movimientos.value = movimientos.value.map(movimiento => {
-            if (movimiento.categori_id === response.data.id) {
-              movimiento.categori_name = response.data.name
+            if (response.data) {
+              if (movimiento.categori_id === response.data.id) {
+                movimiento.categori_name = response.data.name
+                movimiento.sub_categori_name = response.data.sub_categories.length &&
+                  (response.data.sub_categories.find(subcat => subcat.id === movimiento.sub_categori_id)?.name || 'Otros')
+              }
             }
             return movimiento
           })
@@ -161,7 +153,7 @@ function fetchMovimientos() {
       });
 
       // Obtener subcategorías
-      uniqueSubCategories.forEach(subcat_id => {
+      /*uniqueSubCategories.forEach(subcat_id => {
         api.get('sub-categorias/' + subcat_id).then(response => {
           movimientos.value = movimientos.value.map(movimiento => {
             if (movimiento.sub_categori_id === response.data.id) {
@@ -170,7 +162,7 @@ function fetchMovimientos() {
             return movimiento
           })
         })
-      });
+      });*/
 
     }
     if (response.data?.pagination) {

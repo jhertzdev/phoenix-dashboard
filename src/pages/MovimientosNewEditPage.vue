@@ -53,9 +53,11 @@
               :options="tiposCategoria"
               :rules="[ val => val && val.value > 0 || 'Selecciona el tipo de movimiento.' ]"
               hint="Selecciona el tipo de movimiento."
+              @update:model-value="handleUpdateTipoMovimiento"
               clearable
             />
             <q-select
+              v-if="updateData.tipo"
               filled
               square
               label="Categoría"
@@ -65,19 +67,23 @@
               @virtual-scroll="onCategoriesScroll"
               @clear="updateData.subCategory = null"
               hint="Selecciona una categoría (opcional)."
+              @update:model-value="handleUpdateCategory"
               clearable
             />
             <q-select
+              v-if="updateData.category && availableSubCategories.length"
               filled
               square
               label="Sub-categoría"
               v-model="updateData.subCategory"
               :options="availableSubCategories"
-              :loading="subCategoriesLoading"
-              :disable="!updateData.category"
-              @virtual-scroll="onSubCategoriesScroll"
               hint="Selecciona una sub-categoría (opcional)."
               clearable
+            />
+            <q-spinner
+              color="primary"
+              size="3em"
+              v-if="isLoadingSubCategories"
             />
             <div class="text-center q-mt-lg">
               <q-btn square label="Reestablecer" type="button" color="secondary" @click="handleResetForm" class="q-mr-sm" />
@@ -130,6 +136,7 @@ const tiposCategoria = [
 
 const movimientoId = route.params.id
 const isLoading = ref(!!movimientoId)
+const isLoadingSubCategories = ref(false)
 const buttonLoading = ref(false)
 
 // Cuentas:
@@ -186,7 +193,14 @@ const onCategoriesScroll = ({to, ref}) => {
 }
 
 function getCategorias(pageId, ref = null) {
-  api.get('categorias?page=' + pageId)
+  let endpoint = 'categorias?page=' + pageId;
+
+  if ([1, 2].includes(updateData.value?.tipo?.value)) {
+    endpoint += '&tipo=' + updateData.value.tipo.value
+  }
+
+  //api.get('categorias?page=' + pageId)
+  api.get(endpoint)
     .then(response => {        
       availableCategories.value = [...availableCategories.value, ...response.data.data.map(cat => {
             return {
@@ -211,95 +225,101 @@ function getCategorias(pageId, ref = null) {
 }
 
 // Sub-Categorías:
-const subCategoriesLoading = ref(false)
 const availableSubCategories = ref([])
-const nextPageSubCategories = ref(1)
-const lastPageSubCategories = ref(0)
 
-const onSubCategoriesScroll = ({to, ref}) => {
-  const lastIndex = availableSubCategories.value.length - 1 
-  if (subCategoriesLoading.value !== true && nextPageSubCategories.value <= lastPageSubCategories.value && to === lastIndex) {
-    subCategoriesLoading.value = true
-    getSubCategorias(nextPageSubCategories.value, ref)
-  }
-}
-
-function getSubCategorias(pageId, ref = null) {
-  api.get('sub-categorias?page=' + pageId)
-    .then(response => {
-      availableSubCategories.value = [...availableSubCategories.value, ...response.data.data.map(cat => {
-            return {
-              value: cat.id,
-              label: cat.name
-            }
-          }
-        )
-      ]
-      nextPageSubCategories.value++
-      lastPageSubCategories.value = response.data.pagination.lastPage
-
-      if (ref !== null) {
-        nextTick(() => {
-          ref.refresh()
-          subCategoriesLoading.value = false
-        })
-      }
-
-    })
-    .catch(e => console.log('Error', e))
-}
-
-function fetchData() {  
+async function fetchData() {  
   isLoading.value = true;
-  api.get('movimiento/' + movimientoId)
-    .then(response => {
-      movimientoData.value = response.data
-      updateData.value.reason = response.data.reason
-      updateData.value.total = response.data.total
-      if ([1, 2].includes(response.data?.tipo)) {
-        updateData.value.tipo = {
-          label: tiposCategoria.find(tipo => tipo.value === response.data.tipo)?.label,
-          value: response.data.tipo
+
+  try {
+    const response = await api.get('movimiento/' + movimientoId);
+      
+    movimientoData.value = response.data
+    updateData.value.reason = response.data.reason
+    updateData.value.total = response.data.total
+    if ([1, 2].includes(response.data?.tipo)) {
+      updateData.value.tipo = {
+        label: tiposCategoria.find(tipo => tipo.value === response.data.tipo)?.label,
+        value: response.data.tipo
+      }
+    }
+    if (response.data.account_id) {
+      api.get('bank_account/' + response.data.account_id).then(response2 => {
+        movimientoData.value.accountName = response2.data?.name || response.data.account_id
+        updateData.value.account = {
+          label: movimientoData.value.accountName,
+          value: response2.data?.id || response.data.account_id
         }
-      }
-      if (response.data.account_id) {
-        api.get('bank_account/' + response.data.account_id).then(response2 => {
-          movimientoData.value.accountName = response2.data?.name || response.data.account_id
-          updateData.value.account = {
-            label: movimientoData.value.accountName,
-            value: response2.data?.id || response.data.account_id
-          }
-        })
-      }
-      if (response.data.categori_id) {
-        api.get('categorias/' + response.data.categori_id).then(response2 => {
-          movimientoData.value.categoryName = response2.data?.name || response.data.categori_id
-          updateData.value.category = {
-            label: movimientoData.value.categoryName,
-            value: response2.data?.id || response.data.categori_id
-          }
-        })
-      }
-      if (response.data.sub_categori_id) {
-        api.get('sub-categorias/' + response.data.sub_categori_id).then(response2 => {
-          movimientoData.value.subCategoryName = response2.data?.name || response.data.sub_categori_id
+      })
+    }
+    if (response.data.categori_id) {
+      api.get('categorias/' + response.data.categori_id + '?with[]=sub_categories').then(response2 => {
+        movimientoData.value.categoryName = response2.data?.name || response.data.categori_id
+        updateData.value.category = {
+          label: movimientoData.value.categoryName,
+          value: response2.data?.id || response.data.categori_id
+        }
+
+        let subCategoryData = response2.data?.sub_categories?.find(subcat => subcat.id === movimientoData.value.sub_categori_id)
+
+        if (subCategoryData) {
+          movimientoData.value.subCategoryName = subCategoryData.name || response.data.sub_categori_id
           updateData.value.subCategory = {
             label: movimientoData.value.subCategoryName,
-            value: response2.data?.id || response.data.sub_categori_id
+            value: subCategoryData.id || response.data.sub_categori_id
           }
-        })
-      }
-    })
-    .catch(e => console.log(e))
-    .finally(() => isLoading.value = false)
+        }
+
+        getSubCategorias()
+      })
+    }
+
+  } catch (e) { console.log(e) }
+
+  isLoading.value = false
+    
 }
 
-onMounted(() => {
-  if (movimientoId) fetchData()
+onMounted(async () => {
+  if (movimientoId) await fetchData()
   getCategorias(nextPageCategories.value)
-  getSubCategorias(nextPageSubCategories.value)
   getAccounts(nextPageAccounts.value)
 })
+
+const handleUpdateTipoMovimiento = () => {
+  nextPageCategories.value = 1
+  lastPageCategories.value = 0
+  availableCategories.value = []
+  updateData.value.category = null;
+  getCategorias(nextPageCategories.value)  
+}
+
+const handleUpdateCategory = () => {
+  console.log('Updating category....');
+  updateData.value.subCategory = null
+  availableSubCategories.value = []
+  getSubCategorias()
+}
+
+function getSubCategorias() {
+  if (updateData.value?.category?.value) {
+    isLoadingSubCategories.value = true;
+    console.log('Ok', updateData.value?.category?.value);
+    api.get('categorias/' + updateData.value.category.value + '?with[]=sub_categories').then(response => {
+      console.log('Ok', response.data.sub_categories);
+      if (response.data?.sub_categories) {
+        availableSubCategories.value = [...availableSubCategories.value, ...response.data.sub_categories.map(subcat => {
+              return {
+                value: subcat.id,
+                label: subcat.name
+              }
+            }
+          )
+        ]
+      }
+    }).catch(e => console.log(e))
+    .finally(() => isLoadingSubCategories.value = false)
+  }
+}
 
 const handleSubmitMovimiento = () => {
   buttonLoading.value = true
