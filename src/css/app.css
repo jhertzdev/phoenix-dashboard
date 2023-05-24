@@ -11,6 +11,10 @@
   margin-right: 6px;
 }
 
+.bg-brand {
+  background: #a2aa33 !important;
+}
+
 /* Login y registro */
 
 .auth-card {
@@ -22,10 +26,9 @@
 
 .auth-header {
   color: var(--q-secondary);
-  text-transform: uppercase;
   font-weight: 600;
   margin-bottom: 2rem;
-  font-size: 1.5rem;
+  font-size: 2.3rem;
 }
 
 .auth-footer p {
@@ -35,6 +38,61 @@
 .auth-footer a {
   font-weight: 600;
 }
+
+.titulo {
+  font-weight: 400;
+}
+
+.login1 {
+  padding-top: 20%;
+  color: #454545;
+}
+
+.area{
+    background: #f7fdf5;   
+   
+}
+
+.circles{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.circles li{
+    list-style: none;
+    width: 30%;
+    height: 30%;
+
+    border-radius: 50%;
+    
+}
+.uno {
+    position: fixed;
+    top: -20%;
+    left: -15%;
+    background: #498536;
+}
+
+.dos {
+    position: fixed;
+    top: 90%;
+    right: -15%;
+    background: #b0ccfa;
+}
+
+
+.boton1 {
+  width: 100%; 
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+
+
 
 /* Avatar */
 .user-avatar{ 
@@ -50,3 +108,5 @@ h5.page-title {
   margin-top: 0.5rem;
   font-weight: 600;
 }
+
+

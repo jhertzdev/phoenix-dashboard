@@ -1,48 +1,65 @@
 <template>
-  <q-page class="flex flex-center q-pa-md">
+  <q-page class="flex flex-center q-pa-md area">
 
     <div class="auth-card">
 
-      <div class="auth-header">
-        Inicio de sesión
-      </div>
-      
-      <q-form
-        @submit="handleSubmit"
-        class="q-gutter-md"
-      >
-        <q-input
-          filled
-          square
-          type="text"
-          v-model="userData.email"
-          label="E-mail"
-          lazy-rules
-          :rules="[ (val, rules) => rules.email(val) || 'Ingresa un e-mail válido.' ]"
-        />
-  
-        <q-input
-          filled
-          square
-          type="password"
-          v-model="userData.password"
-          label="Contraseña"
-          lazy-rules
-          :rules="[ val => val && val.length > 0 || 'Ingresa tu contraseña.']"
-        />
-  
-        <div class="text-center q-mt-lg">
-          <q-btn square label="Iniciar sesión" type="submit" color="primary" icon-right="arrow_forward_ios" :loading="buttonLoading" />
+      <div class="flex flex-center" style="font-family: 'Montserrat', sans-serif;">
+          <img src="../assets/ejemplo-login.png" style="border-radius: 50%; width: 50%; height: 50%;" size="20%">
+        <div class="q-pt-lg">
+          <span class="text-h3 titulo" text-weight-bolder>Gofinapp</span>
         </div>
-
-      </q-form>
-
-      <div class="auth-footer q-mt-md">
-        <p>¿No tienes una cuenta?</p>
-        <router-link to="/registro" class="text-secondary">Regístrate</router-link>
       </div>
-      
+
+        <div class="auth-header login1" style="font-family: 'Montserrat', sans-serif;">
+          Iniciar Sesión
+        </div>
+        <q-form
+          @submit="handleSubmit"
+          class="q-gutter-md"
+        >
+          <q-input
+            outlined
+            square
+            type="text"
+            style="font-family: 'Poppins', sans-serif;"
+            v-model="userData.email"
+            label="E-mail Address"
+            lazy-rules
+            :rules="[ (val, rules) => rules.email(val) || 'Ingresa un e-mail válido.' ]"
+          />
+    
+          <q-input
+            outlined
+            square
+            type="password"
+            style="font-family: 'Poppins', sans-serif;"
+            v-model="userData.password"
+            label="Password"
+            lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Ingresa tu contraseña.']"
+          />
+    
+          <div class="text-center q-mt-lg">
+            <q-btn square label="Login" class="boton1" padding="4% 5%" type="submit" color="blue-9" :loading="buttonLoading" />
+          </div>
+
+        </q-form>
+
+          <div class="auth-footer q-mt-md" style="font-family: 'Poppins', sans-serif;">
+              <p>¿No tienes una cuenta?</p>
+              <router-link to="/registro" class="text-secondary">Regístrate</router-link>
+          </div>
+
     </div>
+
+<!--///////////FONDO//////////////////////////-->
+
+            <ul class="circles">
+                    <li class="uno"></li>
+                    <li class="dos"></li>
+            </ul>
+<!--////////////////////////////////////-->
+
 
   </q-page>
 </template>
@@ -85,3 +102,9 @@ const handleSubmit = () => {
 }
 
 </script>
+
+<style>
+
+
+
+</style>

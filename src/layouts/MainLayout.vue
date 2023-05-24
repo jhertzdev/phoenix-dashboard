@@ -174,4 +174,7 @@ const menuLinks = linksList
 .q-header .q-btn-dropdown__arrow {
   display: none;
 }
+
+
+
 </style>
