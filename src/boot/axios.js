@@ -1,14 +1,14 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
-const url_dev = 'https://excel.api.phoenixtechsa.com/api/';
+const url_dev = 'https://backend.excel.tarjetajovendiamante.com/api/';
 const api = axios.create({ baseURL: url_dev })
 
 if (localStorage.getItem('token')) {
   api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 }
 
-export default boot(({ app, router }) => {
+export default boot(({ app, router }) => { 
   
   api.interceptors.response.use(response => {
     return response;
