@@ -96,20 +96,20 @@
               outlined 
               v-model="input.model" :options="options" 
               label="Nombre del Banco" 
-              style="width: 150%; margin-left: -20%;"
+              style="width: 150%; margin-left: -20%; margin-top: 15%;"
               behavior="menu"
               />
               <q-select 
               outlined 
               v-model="input.model2" :options="options2" 
               label="Tipo de cuenta" 
-              style="width: 150%; margin-left: -20%;"
+              style="width: 150%; margin-left: -20%; margin-top: 5%;"
               behavior="menu"
               />
               <q-btn @click="removeInput(index)" label="Eliminar" />
               </div>
               
-              <q-btn @click="addInput" label="Agregar Selects" />
+              <q-btn @click="addInput" label="Agregar" />
               <q-btn outline no-caps label="Sigamos" class="boton2" align="right" size="160%" icon="las la-long-arrow-alt-right" type="submit"/>
               </q-form>
 
