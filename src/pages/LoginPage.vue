@@ -1,8 +1,7 @@
 <template>
-  <q-page class="flex flex-center q-pa-md area">
+  <q-page class="flex flex-center q-pa-lg fondo">
 
-    <div class="auth-card">
-
+    <div class="auth-card cardd" style="position: fixed; z-index: 100000000000;">
       <div class="flex flex-center" style="font-family: 'Montserrat', sans-serif;">
           <img src="../assets/ejemplo-login.png" style="border-radius: 50%; width: 50%; height: 50%;" size="20%">
         <div class="q-pt-lg">
@@ -102,9 +101,3 @@ const handleSubmit = () => {
 }
 
 </script>
-
-<style>
-
-
-
-</style>

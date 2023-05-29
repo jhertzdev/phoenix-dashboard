@@ -17,11 +17,21 @@
 
 /* Login y registro */
 
+@media screen and (min-width: 600px) {
+  .auth-card {
+    text-align: center;
+    width: 100%;
+    padding: 50px;
+    max-width: 400px;
+  }
+}
+@media screen and (max-width: 599px) {
 .auth-card {
   text-align: center;
   width: 100%;
-  padding: 0 10px;
+  padding: 10%;
   max-width: 400px;
+}
 }
 
 .auth-header {
@@ -48,13 +58,11 @@
   color: #454545;
 }
 
-.area{
-    background: #f7fdf5;   
-   
+.fondo{
+    background: #f7fdf5; 
 }
 
 .circles{
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -66,7 +74,6 @@
     list-style: none;
     width: 30%;
     height: 30%;
-
     border-radius: 50%;
     
 }
@@ -83,7 +90,6 @@
     right: -15%;
     background: #b0ccfa;
 }
-
 
 .boton1 {
   width: 100%; 
@@ -110,3 +116,161 @@ h5.page-title {
 }
 
 
+/*Registro */
+
+@media screen and (min-width: 601px) {
+  .otro {
+    padding: 50px;
+  }
+  .texto-mod1{
+    position: relative;
+    top: 30%;
+    left: 10%;
+  }
+
+  .boton2 {
+    position: relative;
+    bottom: -60%;
+    right: 44%;
+  }
+  
+  .texto-mod2 {
+    font-size: 2.5rem;
+    line-height: 150%;
+    position: relative;
+    top: 40%;
+    left: 17%;
+  }
+
+  .texto-mod3 {
+    position: relative;
+    top: -5%;
+    font-size: 3rem;
+  }
+
+  .texto-mod4 {
+    width: 60%;
+    line-height: 150%;
+    font-size: 2rem;
+    position: relative;
+    top: -23%;
+  }
+  .texto-mod5 {
+    font-size: 2rem;
+    position: relative;
+    top: -13%;
+  }
+
+  .ul1 {
+    font-size: 1.3rem;
+    position: relative;
+    top: -13%;
+    left: 5%;
+  }
+
+  .boton2-1 {
+    position: relative;
+    bottom: 4%;
+  }
+  
+
+}
+
+@media screen and (max-width: 600px) {
+  .otro {
+    padding: 10%;
+    }
+
+  .texto-mod1 {
+    font-size: 2.3rem;
+    position: relative;
+    top: 20%;
+  
+  }
+  
+  .texto-mod2 {
+    font-size: 1rem;
+    width: 70%;
+    position: relative;
+    top: 25%;
+  }
+  
+  .texto-mod3 {
+    font-size: 2.3rem;
+  }
+  
+  .boton2 {
+    position: relative;
+    bottom: -30%;
+    right: 25%;
+    margin-top: 10%;
+  }
+  
+  .texto-mod5 {
+    font-size: 1.2rem;
+    padding-top: 5%;
+    margin-left: -20%;
+    font-size: 1rem;
+  }
+
+
+}
+
+/* /////////////////////////////////////// */
+.texto-mod1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #3B3B3B;
+}
+
+.texto-mod2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  color: #3B3B3B;
+  width: 70%;
+
+}
+
+.texto-mod3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  color: #3B3B3B;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  line-height: 120%;
+}
+
+
+.texto-mod4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+  color: #3B3B3B;
+  text-align: left;
+}
+
+.texto-mod5 {
+  font-family: 'Poppins', sans-serif;
+  font-weight:300;
+  color: #3B3B3B;
+  margin-top: -5%;
+}
+
+
+
+.boton2, .boton2-1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 300;
+}
+
+.ul1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight:300;
+  text-align: justify;
+  list-style-type: none;
+  line-height: 1.8;
+}
+
+
+.spaced1 {
+  margin-left: 15%;
+}

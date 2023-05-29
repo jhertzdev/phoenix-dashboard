@@ -1,7 +1,14 @@
 <template>
   <Line id="my-chart-id" :options="chartOptions" :data="chartData" />
 </template>
+<style scoped>
 
+  #my-chart-id {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+</style>
 <script setup>
 import { Line } from 'vue-chartjs'
 import {

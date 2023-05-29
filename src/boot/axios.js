@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
-const url_dev = 'https://excel.api.phoenixtechsa.com/api/';
+const url_dev = 'https://backend.excel.tarjetajovendiamante.com/api/';
 const api = axios.create({ baseURL: url_dev })
 
 if (localStorage.getItem('token')) {
