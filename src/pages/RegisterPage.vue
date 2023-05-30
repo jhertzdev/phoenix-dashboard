@@ -71,17 +71,19 @@
         <q-carousel-slide name="thirdSlide" class="column no-wrap flex-center padding1">
               <span class="text-h2 texto-mod3">¿Cuantas cuentas de banco tienes?</span>
 
-              <q-form
+                <q-form
                 @submit="onSubmit"
                 @reset="onReset"
                 class="q-gutter-md"
               >
+
               <q-select 
               outlined 
-              v-model="model" :options="options" 
+              v-model="selectedBank" :options="banksAvailable" 
               label="Nombre del Banco" 
               style="width: 150%; margin-left: -20%;"
               behavior="menu"
+              class="text"
               />
               <q-select 
               outlined 
@@ -89,29 +91,34 @@
               label="Tipo de cuenta" 
               style="width: 150%; margin-left: -20%;"
               behavior="menu"
+              class="text"
               />
 
               <div v-for="(input, index) in inputs" :key="index">
                 <q-select 
               outlined 
-              v-model="input.model" :options="options" 
+              v-model="selectedBank" :options="banksAvailable"
               label="Nombre del Banco" 
-              style="width: 150%; margin-left: -20%; margin-top: 15%;"
+              style="width: 160%; margin-left: -29%; margin-top: 15%;"
               behavior="menu"
+              class="text"
               />
               <q-select 
               outlined 
               v-model="input.model2" :options="options2" 
               label="Tipo de cuenta" 
-              style="width: 150%; margin-left: -20%; margin-top: 5%;"
+              style="width: 160%; margin-left: -29%; margin-top: 5%;"
               behavior="menu"
+              class="text"
               />
-              <q-btn @click="removeInput(index)" label="Eliminar" />
+              <q-btn round @click="removeInput(index)" color="red-6" icon="las la-minus" class="bton_3"/>
               </div>
-              
-              <q-btn @click="addInput" label="Agregar" />
-              <q-btn outline no-caps label="Sigamos" class="boton2" align="right" size="160%" icon="las la-long-arrow-alt-right" type="submit"/>
-              </q-form>
+
+             <div class="">
+              <q-btn round @click="addInput" color="green-7" icon="las la-plus"  class="bton_2"/>
+              <q-btn outline no-caps label="Sigamos" class="boton2_2" align="right" size="160%" icon="las la-long-arrow-alt-right" type="submit"/>
+             </div> 
+            </q-form>
 
           <!--///////////FONDO//////////////////////////-->
           <ul class="circles" style="z-index: -10; height: fit-content;">
@@ -156,16 +163,17 @@ const $q = useQuasar()
 const authStore = useAuthStore()
 const appStore = useAppStore()
 
-const availableRoles = ref(null)
-
 
 const slide = ref('firstSlide') 
 
-const model= ref(null)
+
 const model2= ref(null)
-const options = ['Banco 1', 'Banco 2', 'Banco 3']
+
 const options2 = ['Tipo 1', 'Tipo 2', 'Tipo 3']
 
+
+const banksAvailable = ref([]);
+const selectedBank = ref(null);
 
 const carouselRef = ref(null)
 
@@ -199,7 +207,17 @@ watch(toRef(appStore, 'modalMessage'), () => {
   }
 });
 
-onMounted(() => {
+
+/*onMounted(() => {
+
+  api.get('banks?selected=1').then(m => {
+    banksAvailable.value = m.data.map( d => {
+      return {
+        value: d.id,
+        label: d.name,
+      }
+    });
+  /*
   api.get('roles?selected=1').then(m => {
     availableRoles.value = m.data.map( d => {
       return {
@@ -208,10 +226,11 @@ onMounted(() => {
       }
     });
 
-    availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')
+    availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')*
 
+    banksAvailable.value = banksAvailable.value.filter(d => d.label !== 'admin')
   }).catch(e => console.log(e))
-})
+})*/
 
 const userData = ref({
   name: null,

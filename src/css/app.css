@@ -98,8 +98,6 @@
 }
 
 
-
-
 /* Avatar */
 .user-avatar{ 
   color: var(--q-secondary);
@@ -172,7 +170,32 @@ h5.page-title {
     position: relative;
     bottom: 4%;
   }
-  
+ 
+  .bton_2 {
+    position: relative;
+    left: 62%;
+  }
+
+  .bton_3 {
+    position: relative;
+    right: 50%;
+  }
+
+
+  .div1 {
+    position: fixed;
+    left: -1%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .boton2_2 {
+    position: relative;
+    left: 41.5%;
+    bottom: -2%;
+  }
+
+
 
 }
 
@@ -185,7 +208,6 @@ h5.page-title {
     font-size: 2.3rem;
     position: relative;
     top: 20%;
-  
   }
   
   .texto-mod2 {
@@ -211,6 +233,11 @@ h5.page-title {
     padding-top: 5%;
     margin-left: -20%;
     font-size: 1rem;
+  }
+
+  .bton_2 {
+    position: relative;
+  color: #3B3B3B; /* cambiar*/
   }
 
 
@@ -257,7 +284,7 @@ h5.page-title {
 
 
 
-.boton2, .boton2-1 {
+.boton2, .boton2-1, .boton2_2 {
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
 }
@@ -274,3 +301,13 @@ h5.page-title {
 .spaced1 {
   margin-left: 15%;
 }
+
+
+.text {
+  font-family: 'Poppins', sans-serif;
+  font-weight:300;
+  color: #3B3B3B;
+}
+
+
+
