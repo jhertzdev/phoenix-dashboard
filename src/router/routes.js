@@ -31,6 +31,7 @@ const routes = [
       // Auth
       { path: 'login', component: () => import('pages/LoginPage.vue') },
       { path: 'registro', component: () => import('pages/RegisterPage.vue') },
+      { path: 'registro_part2', component: () => import('pages/RegisterPart2Page.vue') },
       { path: 'logout', component: () => import('pages/LogoutPage.vue') },
     ]
   },

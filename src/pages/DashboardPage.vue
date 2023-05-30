@@ -193,13 +193,13 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import BarChart from '../components/Dashboard/LineChart.vue'
 import PieChart from '../components/Dashboard/PieChart.vue'
-
+import { useRouter } from 'vue-router';
 import CardTotals from 'src/components/Dashboard/CardTotals.vue';
 import { useQuasar } from 'quasar';
 import { api } from 'src/boot/axios';
 
 const $q = useQuasar()
-
+const router = useRouter()
 const balances = reactive({
   total: null,
   ingresos: null,
@@ -271,6 +271,10 @@ function fetchDashboard() {
 }
 
 onMounted(() => {
+  let user = JSON.parse(localStorage.getItem('user'));
+  if(user.form == 0) {
+    router.push('registro_part2')
+  }
   fetchDashboard()
 })
 

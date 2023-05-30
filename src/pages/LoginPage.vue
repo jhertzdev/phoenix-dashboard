@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center q-pa-lg fondo">
+  <q-page class="flex flex-center q-pa-lg">
 
     <div class="auth-card cardd" style="position: fixed; z-index: 100000000000;">
       <div class="flex flex-center" style="font-family: 'Montserrat', sans-serif;">

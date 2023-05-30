@@ -76,7 +76,7 @@ export const useAuthStore = defineStore({
 
             try {
                 const response = await api.post('/register', userData)
-                this.login(userData.email, userData.password, true)
+                this.login(userData.email, userData.password, true) //login
             } catch (error) {
                 console.log('Error', error);
                 appStore.modalMessage = {
@@ -92,7 +92,7 @@ export const useAuthStore = defineStore({
             this.token = null;
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            this.router.push('/login')
+            console.log('logout');
         }
     }
 });
