@@ -1,11 +1,11 @@
 <template>
-  <q-page class="flex flex-center q-pa-lg fondo">
+  <q-page class="flex flex-center q-pa-lg">
 
-    <div class="auth-card cardd" style="position: fixed; z-index: 100000000000;">
+    <div class="auth-card cardd" style="position: fixed; z-index: 100;">
       <div class="flex flex-center" style="font-family: 'Montserrat', sans-serif;">
-          <img src="../assets/ejemplo-login.png" style="border-radius: 50%; width: 50%; height: 50%;" size="20%">
+          <img src="../assets/logo-gofinapp.png" style="border-radius: 50%; width: 50%; height: 40%; padding-top: 7%; margin-bottom: -7%;" size="20%">
         <div class="q-pt-lg">
-          <span class="text-h3 titulo" text-weight-bolder>Gofinapp</span>
+          <img src="../assets/titulo.png" class="titulo">
         </div>
       </div>
 
@@ -44,9 +44,8 @@
 
         </q-form>
 
-          <div class="auth-footer q-mt-md" style="font-family: 'Poppins', sans-serif;">
-              <p>¿No tienes una cuenta?</p>
-              <router-link to="/registro" class="text-secondary">Regístrate</router-link>
+          <div class="auth-footer q-mt-md" style="font-family: 'Poppins', sans-serif; margin-bottom: 5%;">
+              <p>¿No tienes una cuenta? <router-link to="/registro" class="text-second">Regístrate</router-link></p>
           </div>
 
     </div>

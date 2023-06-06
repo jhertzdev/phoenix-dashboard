@@ -45,23 +45,22 @@
   margin-bottom: 0;
 }
 
-.auth-footer a {
+
+.titulo {
+  width: 45%;
+}
+
+.text-second {
+  font-family: 'Poppins', sans-serif;
+  color: #0150AC;
+  text-decoration: none;
   font-weight: 600;
 }
 
-.titulo {
-  font-weight: 400;
-}
-
 .login1 {
-  padding-top: 20%;
+  padding-top: 10%;
   color: #454545;
 }
-
-.fondo{
-    background: #f7fdf5; 
-}
-
 .circles{
     top: 0;
     left: 0;
@@ -310,4 +309,8 @@ h5.page-title {
 }
 
 
-
+.titulo3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  padding-bottom: 5%;
+}

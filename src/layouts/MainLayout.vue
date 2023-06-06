@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/login', '/registro'].includes(route.path)" elevated>
+    <q-header v-if="!['/login', '/registro','/registro_part2'].includes(route.path) || user_form===true" elevated>
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-toolbar-title>
@@ -46,13 +46,21 @@
         </template>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-if="!['/login', '/registro'].includes(route.path)">
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-if="!['/login', '/registro','/registro_part2'].includes(route.path) || user_form === true" elevated>
       <q-list>
         <q-item-label header>
           Menú
         </q-item-label>
 
         <MenuLink v-for="link in menuLinks" :key="link.title" v-bind="link" v-show="!!authStore.user?.id" />
+          <q-item clickable @click="salir()">
+            <q-item-section  avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+             <q-item-section>
+              <q-item-label>Salir</q-item-label>
+            </q-item-section>
+          </q-item>
       </q-list>
     </q-drawer>
     <q-page-container>
@@ -72,7 +80,11 @@ import helpers from '../helpers/app.js'
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
-
+const user= JSON.parse(localStorage.getItem('user'));
+const user_form = ref(false)
+if(user!=null && user.form==1){
+  user_form.value = false
+}
 const route = useRoute()
 
 const links = [
@@ -123,11 +135,6 @@ const links = [
     title: 'Reportes',
     icon: 'data_usage',
     to: '/reportes'
-  },
-  {
-    title: 'Salir',
-    icon: 'logout',
-    to: '/logout'
   }
 ]
 
@@ -159,7 +166,10 @@ const toggleLeftDrawer = () => {
 }
 
 const menuLinks = linksList
-
+const salir=()=>{
+  authStore.logout()
+  window.location = '/login';
+}
 </script>
 
 <style>

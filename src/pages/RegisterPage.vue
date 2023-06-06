@@ -1,150 +1,76 @@
 <template>
-  <q-page class="flex flex-center q-pa-md fondo">
-    
-      <q-carousel
-        ref="carouselRef"
-        v-model="slide"
-        transition-prev="scale"
-        transition-next="scale"
-        animated
-        control-color="blue"
-        navigation
-        padding
-        v-model:fullscreen="isFullscreen"
-        class="text-black fondo otro fullscreen"
-      >
-        <q-carousel-slide name="firstSlide" class="no-wrap flex-center">
-              <span class="text-h3 texto-mod1">Es momento de tomar control de tus finanzas</span>
-              <p class="text-h5 text-justify texto-mod2">En Gofinap vamos a crear tu entorno financiero para que tengas control de tu salud financiera</p>
-        
-   
-              <q-btn 
-                outline
-                no-caps
-                label="Siguiente" 
-                class="boton2 carousel-button right" 
-                style="color:black;"
-                size="160%" 
-                icon="las la-long-arrow-alt-right"
-                @click="nextSlide"
-              />
-            <!--///////////FONDO//////////////////////////-->
-              <ul class="circles" style="z-index: -10; height: fit-content;">
-                <li class="uno"></li>
-                <li class="dos"></li>
-              </ul>
-            <!--////////////////////////////////////-->
+  <q-page class="flex flex-center q-pa-md">
 
-        </q-carousel-slide>
-
-        <q-carousel-slide name="secondSlide" class="column no-wrap flex-center padding1">
-            <span class="text-h2 texto-mod3">¿Cuantas cuentas de banco tienes?</span>
-            <span class="text-h6 text-justify texto-mod4">Es importante llevar control de todos tus movimientos.</span>
-            <br>
-            <p class="text-weight-medium text-left texto-mod5">¿Porque te pedimos esto?</p>
-            <ul class="ul1 q-ma-md">
-              <li><i class="las la-check-circle q-pr-md"></i>Llevar un control eficiente de:</li>
-              <li class="spaced1"><i class="las la-check q-pr-md"></i>Tus ingresos</li>
-              <li class="spaced1"><i class="las la-check q-pr-md"></i>Tus gastos</li>
-              <li><i class="las la-check-circle q-pr-md"></i>Poder automatizar tu proceso de registro de cuentas (ingresos - egresos)</li>
-            </ul>
-            <q-btn 
-                outline
-                no-caps
-                label="Siguiente" 
-                class="boton2-1 carousel-button right" 
-                style="color:black;"
-                size="160%" 
-                icon="las la-long-arrow-alt-right"
-                @click="nextSlide"
-              />
-          <!--///////////FONDO//////////////////////////-->
-            <ul class="circles" style="z-index: -10; height: fit-content;">
-                <li class="uno"></li>
-                <li class="dos"></li>
-            </ul>
-          <!--////////////////////////////////////-->
-
-
-        </q-carousel-slide>
-
-        <q-carousel-slide name="thirdSlide" class="column no-wrap flex-center padding1">
-              <span class="text-h2 texto-mod3">¿Cuantas cuentas de banco tienes?</span>
-
-                <q-form
-                @submit="onSubmit"
-                @reset="onReset"
-                class="q-gutter-md"
-              >
-
-              <q-select 
-              outlined 
-              v-model="selectedBank" :options="banksAvailable" 
-              label="Nombre del Banco" 
-              style="width: 150%; margin-left: -20%;"
-              behavior="menu"
-              class="text"
-              />
-              <q-select 
-              outlined 
-              v-model="model2" :options="options2" 
-              label="Tipo de cuenta" 
-              style="width: 150%; margin-left: -20%;"
-              behavior="menu"
-              class="text"
-              />
-
-              <div v-for="(input, index) in inputs" :key="index">
-                <q-select 
-              outlined 
-              v-model="selectedBank" :options="banksAvailable"
-              label="Nombre del Banco" 
-              style="width: 160%; margin-left: -29%; margin-top: 15%;"
-              behavior="menu"
-              class="text"
-              />
-              <q-select 
-              outlined 
-              v-model="input.model2" :options="options2" 
-              label="Tipo de cuenta" 
-              style="width: 160%; margin-left: -29%; margin-top: 5%;"
-              behavior="menu"
-              class="text"
-              />
-              <q-btn round @click="removeInput(index)" color="red-6" icon="las la-minus" class="bton_3"/>
-              </div>
-
-             <div class="">
-              <q-btn round @click="addInput" color="green-7" icon="las la-plus"  class="bton_2"/>
-              <q-btn outline no-caps label="Sigamos" class="boton2_2" align="right" size="160%" icon="las la-long-arrow-alt-right" type="submit"/>
-             </div> 
-            </q-form>
-
-          <!--///////////FONDO//////////////////////////-->
-          <ul class="circles" style="z-index: -10; height: fit-content;">
-                <li class="uno"></li>
-                <li class="dos"></li>
-            </ul>
-          <!--////////////////////////////////////-->
-
-
-        </q-carousel-slide>
-
-      </q-carousel>
-
-
-
-
+    <div class="auth-card">
+      <div><img src="../assets/logo-gofinapp.png" style="border-radius: 50%; width: 30%; height: 20%; margin-top: -15%; margin-bottom: -7%;" size="20%"></div>
+      <p class="auth-header titulo3">Regístrate</p>
       
-  <!-- //////////////////////////////////////////////////////////////////////  -->
-  
+      <q-form
+        @submit="handleSubmit"
+        class="q-gutter-md"
+      >
+
+        <q-input
+          outlined
+          square
+          type="text"
+          v-model="userData.name"
+          style="font-family: 'Poppins', sans-serif; margin-bottom: -3%; height: 5%;"
+          label="Nombre"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Ingresa tu nombre.']"
+        />
+        <q-input
+          outlined
+          square
+          type="text"
+          v-model="userData.email"
+          style="font-family: 'Poppins', sans-serif; margin-bottom: -3%; height: 5%;"
+          label="E-mail"
+          lazy-rules
+          :rules="[ (val, rules) => rules.email(val) || 'Ingresa un e-mail válido.' ]"
+        />
+        <q-select
+          outlined
+          square
+          v-model="userData.role"
+          :options="availableRoles"
+          style="font-family: 'Poppins', sans-serif; margin-bottom: -3%; height: 5%;"
+          label="Rol de usuario"
+          :rules="[ val => val?.value > 0 || 'Selecciona un rol válido.' ]"
+        />
+        <q-input
+          outlined
+          square
+          type="password"
+          v-model="userData.password"
+          style="font-family: 'Poppins', sans-serif; margin-bottom: 17%; height: 5%;"
+          label="Contraseña"
+          lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Ingresa tu contraseña.']"
+        /> 
+
+        <div class="text-center q-mt-lg">
+          <q-btn square label="Confirmar" class="boton1" padding="4% 5%" type="submit" color="blue-9" :loading="buttonLoading" />
+        </div>
+
+
+      </q-form>
 
       <div class="auth-footer q-mt-md">
-        <p>¿Ya tienes una cuenta?</p>
-        <router-link to="/login" class="text-secondary">Inicia sesión</router-link>
+        <p>¿Ya tienes una cuenta? <router-link to="/login" class="text-second">Inicia sesión</router-link></p>
       </div>
-    
-    <!-- MODIFICAR AQUI, Y PONER UN BOTON ARRIBA A LA IZQ-->
+      
+    </div>
+
+<!--///////////FONDO//////////////////////////-->
+
+<ul class="circles">
+                    <li class="uno"></li>
+                    <li class="dos"></li>
+            </ul>
+<!--////////////////////////////////////-->
+
 
 
   </q-page>
@@ -157,43 +83,13 @@ import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store';
 import { useAppStore } from 'src/stores/app.store';
-
+import axios from 'axios';
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const appStore = useAppStore()
 
-
-const slide = ref('firstSlide') 
-
-
-const model2= ref(null)
-
-const options2 = ['Tipo 1', 'Tipo 2', 'Tipo 3']
-
-
-const banksAvailable = ref([]);
-const selectedBank = ref(null);
-
-const carouselRef = ref(null)
-
-const prevSlide = () => {
-  carouselRef.value.prev()
-}
-
-const nextSlide = () => {
-  carouselRef.value.next()
-}
-
-const inputs = ref([])
-
-const addInput = () => {
-  inputs.value.push({ model1: null, model2: null })
-}
-
-const removeInput = (index) => {
-  inputs.value.splice(index, 1)
-}
+const availableRoles = ref(null)
 
 watch(toRef(appStore, 'modalMessage'), () => {
   if (!appStore.modalIsVisible) {
@@ -207,17 +103,7 @@ watch(toRef(appStore, 'modalMessage'), () => {
   }
 });
 
-
-/*onMounted(() => {
-
-  api.get('banks?selected=1').then(m => {
-    banksAvailable.value = m.data.map( d => {
-      return {
-        value: d.id,
-        label: d.name,
-      }
-    });
-  /*
+onMounted(() => {
   api.get('roles?selected=1').then(m => {
     availableRoles.value = m.data.map( d => {
       return {
@@ -226,11 +112,10 @@ watch(toRef(appStore, 'modalMessage'), () => {
       }
     });
 
-    availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')*
+    availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')
 
-    banksAvailable.value = banksAvailable.value.filter(d => d.label !== 'admin')
   }).catch(e => console.log(e))
-})*/
+})
 
 const userData = ref({
   name: null,
@@ -244,15 +129,28 @@ const buttonLoading = ref(false)
 const handleSubmit = () => {
   buttonLoading.value = true
   
-  let registerData = {
-    name: userData.value.name,
-    email: userData.value.email,
-    password: userData.value.password,
-    role_id: userData.value.role.value
+
+  const registerData = {
+    name: userData.name,
+    email: userData.email,
+    password: userData.password,
+    role_id: userData.role,
+    active: 1,
   }
-  authStore.register(registerData).finally(() => {
-    buttonLoading.value = false
-  })
-}  
+
+  axios.post('https://backend.excel.tarjetajovendiamante.com/api/register', registerData)
+    .then(response => {
+      // Procesar respuesta exitosa de la API
+      console.log('Datos guardados:', response.data),
+      this.$router.push('registro_part2')
+    })
+    .catch(error => {
+      // Manejar error de la solicitud
+      console.error('Error al guardar los datos:', error)
+    })
+    .finally(() => {
+      buttonLoading.value = false
+    })
+}
 
 </script>
