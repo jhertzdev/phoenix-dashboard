@@ -122,21 +122,24 @@ h5.page-title {
   .texto-mod1{
     position: relative;
     top: 30%;
-    left: 10%;
+    left: 0%;
   }
 
   .boton2 {
     position: relative;
-    bottom: -60%;
-    right: 44%;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    bottom: -50%;
+    right: 0%;
   }
   
   .texto-mod2 {
     font-size: 2.5rem;
     line-height: 150%;
+    width: 70%;
     position: relative;
     top: 40%;
-    left: 17%;
+    left: 0%;
   }
 
   .texto-mod3 {
@@ -155,7 +158,8 @@ h5.page-title {
   .texto-mod5 {
     font-size: 2rem;
     position: relative;
-    top: -13%;
+    top: -10%;
+    margin-top: 1%;
   }
 
   .ul1 {
@@ -194,7 +198,34 @@ h5.page-title {
     bottom: -2%;
   }
 
+  .logo-1 {
+    border-radius: 50%; 
+    width: 10%; 
+    height: 25%;
+    position: fixed;
+    top: 0%;
+    right: 10%;
+  }
 
+  .logo-2 {
+    border-radius: 50%; 
+    width: 10%; 
+    height: 25%;
+    position: fixed;
+    top: 0%;
+    left: 45%;
+  }
+
+  .tittle {
+    font-weight: 500;
+    position: relative;
+    left: 40%;
+  }
+
+  .select-1 {
+    position: relative;
+    top: 32%;
+  }
 
 }
 
@@ -211,7 +242,7 @@ h5.page-title {
   
   .texto-mod2 {
     font-size: 1rem;
-    width: 70%;
+    width: 100%;
     position: relative;
     top: 25%;
   }
@@ -223,14 +254,13 @@ h5.page-title {
   .boton2 {
     position: relative;
     bottom: -30%;
-    right: 25%;
     margin-top: 10%;
   }
   
   .texto-mod5 {
     font-size: 1.2rem;
     padding-top: 5%;
-    margin-left: -20%;
+    margin-left: 0%;
     font-size: 1rem;
   }
 
@@ -239,6 +269,29 @@ h5.page-title {
   color: #3B3B3B; /* cambiar*/
   }
 
+  .logo-1 {
+    border-radius: 50%; 
+    width: 25%; 
+    height: 20%;
+    position: fixed;
+    top: 0%;
+    right: 5%;
+  }
+
+  .logo-2 {
+    border-radius: 50%; 
+    width: 25%; 
+    height: 20%;
+    position: fixed;
+    top: 0%;
+    left: 40%;
+  }
+
+  .tittle {
+    font-weight: 500;
+    position: relative;
+    left: 30%;
+  }
 
 }
 
@@ -253,7 +306,6 @@ h5.page-title {
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   color: #3B3B3B;
-  width: 70%;
 
 }
 
@@ -278,7 +330,6 @@ h5.page-title {
   font-family: 'Poppins', sans-serif;
   font-weight:300;
   color: #3B3B3B;
-  margin-top: -5%;
 }
 
 
@@ -313,4 +364,59 @@ h5.page-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 2rem;
   padding-bottom: 5%;
+  color: #3B3B3B;
 }
+
+.centerr {
+  position: relative;
+  left: 23%;
+}
+
+
+/* ////////////////////////////////////  */
+
+.menu-btn {
+  position: fixed;
+  top: 3%;
+  right: 5%;
+}
+
+.header-img {
+  position: absolute;
+  top: 80%;
+  left: 12%;
+  transform: translate(-50%, -50%);
+  height: 200%; /* Altura relativa de la imagen dentro del header */
+  width: auto;
+}
+
+table > *{
+  font-size:2em
+}
+th,td{
+  padding:0.5em;
+  text-align:center;
+}
+.circle {
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  z-index: 1;
+}
+.arriba{
+  position:fixed;
+  top: -19%;
+  left: -19%;
+  background-color: #498536;
+}
+.abajo{
+  background-color: #b0ccfa;
+  position:fixed;
+  bottom: -19%;
+  right: -19%;
+}
+.my-card{
+  background: white;
+  text-align:center;
+}
+

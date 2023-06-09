@@ -1,16 +1,47 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header v-if="!['/login', '/registro','/registro_part2'].includes(route.path) || user_form===true" elevated>
+  <q-layout view="lHh Lpr lFf" style="background: #F1F1F1;">
+
+
+    <q-header fixed v-if="!['/login', '/registro', '/registro2' ].includes(route.path) || user_form===true" elevated style="background-color: white; color: black; height: 12%;">
+      
+      
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>
-          {{ getTitleFromPath(route.path) }}
-        </q-toolbar-title>
+        <q-btn flat dense round icon="las la-sliders-h" aria-label="Menu" @click="toggleLeftDrawer" class="menu-btn" size="15px" style="z-index: 100000;"/>
+        
         <template v-if="authStore.user">
-          <div class="right text-align-center" style="position:relative">
-            <q-btn-dropdown color="white" icon="notifications" flat size="md" dense>
+          <img src="../assets/logo-gofinapp.png" class="header-img"> 
+         
+          <div class="text-align-center">
+          </div>
+        </template>
+
+      </q-toolbar>
+    </q-header>
+    
+    
+    
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-if="!['/login', '/registro', '/registro2' ].includes(route.path) || user_form === true" elevated>
+      <q-list>
+        <q-item-label header>
+          Menú
+        </q-item-label>
+
+        <MenuLink v-for="link in menuLinks" :key="link.title" v-bind="link" v-show="!!authStore.user?.id" />
+          <q-item clickable @click="salir()">
+            <q-item-section  avatar>
+              <q-icon name="logout" />
+            </q-item-section>
+             <q-item-section>
+              <q-item-label>Salir</q-item-label>
+            </q-item-section>
+          </q-item>
+      </q-list>
+    </q-drawer>
+    <q-footer fixed v-if="!['/login', '/registro', '/registro2' ].includes(route.path) || user_form===true" elevated style="background-color: white; color: black; height: 10%;">
+        <q-toolbar>
+          <q-btn-dropdown color="white" icon="notifications" flat size="md" dense>
               <q-list style="width: 300px; max-width: 100%;">
-                <q-item v-for="notification in appStore.notifications">
+              <q-item v-for="notification in appStore.notifications" :key="notification.id">
                   <q-item-section>
                     <q-item-label>{{ notification.titulo }}</q-item-label>
                     <q-item-label caption>{{ notification.body }}</q-item-label>
@@ -32,41 +63,26 @@
                 </q-item>
               </q-list>
             </q-btn-dropdown>
-            <q-badge color="secondary" rounded v-if="appStore.notifications.length" floating>
+            <q-badge color="black" rounded v-if="appStore.notifications.length" floating>
               {{ appStore.notifications.length }}
             </q-badge>
-          </div>
-          <div class="right text-align-center">
+        </q-toolbar>
+      </q-footer>
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+
+          <!--
             <q-item clickable :to="'/perfil/' + authStore.user.id" class="q-px-sm">
               <q-avatar>
                 <img src="avatar.png">
               </q-avatar>
             </q-item>
-          </div>
-        </template>
-      </q-toolbar>
-    </q-header>
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered v-if="!['/login', '/registro','/registro_part2'].includes(route.path) || user_form === true" elevated>
-      <q-list>
-        <q-item-label header>
-          Menú
-        </q-item-label>
 
-        <MenuLink v-for="link in menuLinks" :key="link.title" v-bind="link" v-show="!!authStore.user?.id" />
-          <q-item clickable @click="salir()">
-            <q-item-section  avatar>
-              <q-icon name="logout" />
-            </q-item-section>
-             <q-item-section>
-              <q-item-label>Salir</q-item-label>
-            </q-item-section>
-          </q-item>
-      </q-list>
-    </q-drawer>
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+          -->  
+
+
 </template>
 
 <script setup>

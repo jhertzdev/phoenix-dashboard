@@ -37,6 +37,7 @@
           :options="availableRoles"
           style="font-family: 'Poppins', sans-serif; margin-bottom: -3%; height: 5%;"
           label="Rol de usuario"
+          class="select-2"
           :rules="[ val => val?.value > 0 || 'Selecciona un rol válido.' ]"
         />
         <q-input
@@ -84,12 +85,13 @@ import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/auth.store';
 import { useAppStore } from 'src/stores/app.store';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 const $q = useQuasar()
 const authStore = useAuthStore()
 const appStore = useAppStore()
-
-const availableRoles = ref(null)
+const router = useRouter()
+const availableRoles = ref([])
 
 watch(toRef(appStore, 'modalMessage'), () => {
   if (!appStore.modalIsVisible) {
@@ -104,46 +106,57 @@ watch(toRef(appStore, 'modalMessage'), () => {
 });
 
 onMounted(() => {
-  api.get('roles?selected=1').then(m => {
-    availableRoles.value = m.data.map( d => {
-      return {
+  axios.get('https://backend.excel.tarjetajovendiamante.com/api/roles?selected=1')
+    .then(response => {
+      availableRoles.value = response.data.map(d => ({
         value: d.id,
-        label: d.name,
-      }
-    });
+        label: d.name
+      }))
 
-    availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')
-
-  }).catch(e => console.log(e))
+      availableRoles.value = availableRoles.value.filter(d => d.label !== 'admin')
+    })
+    .catch(error => console.log(error))
 })
+/////////////////////////////
 
 const userData = ref({
   name: null,
   email: null,
   password: null,
-  role: null
+  role: null,
+  active: 1
 })
 
 const buttonLoading = ref(false)
 
+
+/////////////////////////////////////
 const handleSubmit = () => {
   buttonLoading.value = true
   
 
-  const registerData = {
-    name: userData.name,
-    email: userData.email,
-    password: userData.password,
-    role_id: userData.role,
-    active: 1,
+const registerData = {
+    name: userData.value.name,
+    email: userData.value.email,
+    password: userData.value.password,
+    role_id: userData.value.role?.value,
+    active: userData.value.active
   }
-
-  axios.post('https://backend.excel.tarjetajovendiamante.com/api/register', registerData)
-    .then(response => {
-      // Procesar respuesta exitosa de la API
-      console.log('Datos guardados:', response.data),
-      this.$router.push('registro_part2')
-    })
+  
+  authStore.register(registerData).then(response => {
+    if(response === 201 || 200) {
+        $q.notify({
+          type: 'positive',
+          message: 'Usuario agregado!',
+        })
+        router.push('/registro2')
+    } else {
+      $q.notify({
+          type: 'negative',
+          message: 'No se pudo agregar el usuario.',
+        })
+    }
+  })
     .catch(error => {
       // Manejar error de la solicitud
       console.error('Error al guardar los datos:', error)
@@ -151,6 +164,7 @@ const handleSubmit = () => {
     .finally(() => {
       buttonLoading.value = false
     })
+
 }
 
 </script>
