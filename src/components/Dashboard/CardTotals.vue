@@ -1,5 +1,5 @@
 <template>
-  <q-card flat bordered class="card-totals">
+  <q-card flat bordered class="card-totals" style="border-radius: 5%; height: max-content; font-family: 'Poppins', sans-serif;">
     <q-item>
       <q-item-section avatar>
         <q-avatar size="lg" :icon="props.icon"/>
@@ -15,9 +15,12 @@
     <q-item v-if="$q.screen.lt.lg" style="min-height: 0">
       <q-item-section>
         <q-skeleton type="QBadge" class="q-mx-auto" v-if="props.total === null || typeof(props.total) === 'undefined'"/>
-        <q-item-label class="text-center text-weight-bold" v-else>
+        <q-item-label class="q-pl-md q-pb-sm text-left text-weight-bold" style="font-size: x-large; color: #7B817B;" v-else>
           {{ props.total ? `$${parseFloat(props.total).toFixed(2)}` : '$0.00' }}
         </q-item-label>
+      </q-item-section>
+      <q-item-section>
+        <q-chip square dense color="green" style="width: fit-content; position: relative; left: -100%; top: 80%;">+10%</q-chip>
       </q-item-section>
     </q-item>
   </q-card>
@@ -31,6 +34,7 @@
   .q-card > .q-item .q-item__section--avatar {
     padding-right: 0;
     min-width: 0;
+
   }
 
   .row .q-card.card-totals {
@@ -47,6 +51,7 @@
     border-bottom-right-radius: 4px;
     border-left: 0;
   }
+
 }
 
 </style>

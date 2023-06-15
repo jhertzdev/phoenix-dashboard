@@ -1,130 +1,80 @@
 <template>
   <q-page>
+<!-- FALTA ACOMODAR VISUALMENTE-->
+    <div class="row" style="padding-bottom: 15%; margin-top: -10%;">
+      <div class="col-1"></div>      
+      <div class="col-9">      
+        <div class="contenido">
+        <div class="circulo col-1">
+          <q-icon name="las la-dollar-sign" color="white" size="25px" class="middle"></q-icon>
+        </div>
+      </div>  
+        <CardTotals title="Balance total" :total="dashboardData?.balance" style="height:100%; width: 115%; margin-left: -2%; " />
+        <q-btn 
+          dense 
+          flat
+          round 
+          :icon="expanded.inicio1 ? 'las la-angle-down' : 'las la-angle-up'"
+          @click="() => expanded.inicio1 = !expanded.inicio1"
+          class="btn-dash"
+        />
+    </div>
+    <div class="col-1"></div>
+
     <div class="row">
+      <div class="col-1"></div>
+      <div class="col-10" style="padding-top: 8%;">
+        <q-expansion-item v-model="expanded.inicio1" :hide-expand-icon="true">
+        <q-card>
+          <q-card-section>
+            <CardTotals class="" title="Ingresos totales" :total="dashboardData?.total_ingresos" icon="trending_up"/>
+            <CardTotals class="" title="Gastos totales" :total="dashboardData?.total_gastos" icon="trending_down" />
+          </q-card-section>
+        </q-card>
+        </q-expansion-item>
+      </div>
+      <div class="col-1"></div>
+    </div>
+
+  </div>
+
+
+
+<!--///////////////////////////////////////////////-->
+
+
       <div class="col-12 col-lg-8">
         <div class="row q-pa-md" :class="$q.screen.lt.lg || 'q-col-gutter-md '">
-          <div class="col-4">
-            <CardTotals class="" title="Balance total" :total="dashboardData?.balance" icon="account_balance_wallet" />
-          </div>
-          <div class="col-4">
-            <CardTotals class="" title="Ingresos totales" :total="dashboardData?.total_ingresos" icon="trending_up" />
-          </div>
-          <div class="col-4">
-            <CardTotals class="" title="Gastos totales" :total="dashboardData?.total_gastos" icon="trending_down" />
-          </div>
-        </div>
-        <div class="row q-col-gutter-md q-px-md">
-          <div class="col-12 col-lg-8">
-            <q-card flat bordered>
-              <q-card-section class="items-center justify-between" horizontal>
-                <q-card-section>
-                  <q-item-label>
-                    <q-btn dense flat :icon="expanded.finanzas ? 'keyboard_arrow_down' : 'keyboard_arrow_up'"
-                      @click="() => expanded.finanzas = !expanded.finanzas" />
-                    Finanzas
-                  </q-item-label>
-                </q-card-section>
-                <q-card-section>
-                  <q-btn-group unelevated>
-                    <q-btn size="sm" :color="filterDays === 7 ? 'primary' : 'orange-2'"
-                      :text-color="filterDays !== 7 && 'secondary'" label="7D" @click="filterDays = 7" />
-                    <q-btn size="sm" :color="filterDays === 15 ? 'primary' : 'orange-2'"
-                      :text-color="filterDays !== 15 && 'secondary'" label="15D" @click="filterDays = 15" />
-                    <q-btn size="sm" :color="filterDays === 30 ? 'primary' : 'orange-2'"
-                      :text-color="filterDays !== 30 && 'secondary'" label="30D" @click="filterDays = 30" />
-                  </q-btn-group>
-                </q-card-section>
-              </q-card-section>
-
-              <q-expansion-item v-model="expanded.finanzas">
-                <q-separator />
-                <q-card-section>
-                  <BarChart :data="movimientos" :range="filterDays" />
-                </q-card-section>
-              </q-expansion-item>
-            </q-card>
-          </div>
-          <div class="col-12 col-lg-4">
-            <q-card flat bordered>
-              <q-card-section class="items-center justify-between" horizontal>
-                <q-card-section>
-                  <q-item-label>
-                    <q-btn dense flat :icon="expanded.gastos ? 'keyboard_arrow_down' : 'keyboard_arrow_up'"
-                      @click="() => expanded.gastos = !expanded.gastos" />
-                    Gastos
-                  </q-item-label>
-                </q-card-section>
-              </q-card-section>
-              <q-expansion-item v-model="expanded.gastos">
-                <q-separator />
-                <q-card-section>
-                  <PieChart :data="dashboardData?.banks || []" />
-                </q-card-section>
-                <q-card-section>
-                  <div class="row q-col-gutter-sm">
-                    <div class="col">
-                      <q-item-section>
-                        <q-item-label>Hoy</q-item-label>
-                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.dia) === 'undefined'"/>
-                        <q-item-label caption v-else>
-                          ${{ dashboardData?.movimientos_por_fecha.dia.toFixed(2) }}
-                        </q-item-label>
-                      </q-item-section>
-                    </div>
-                    <div class="col" hidden>
-                      <q-item-section>
-                        <q-item-label>Semana</q-item-label>
-                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.semana) === 'undefined'"/>
-                        <q-item-label caption v-else>
-                          ${{ dashboardData?.movimientos_por_fecha.semana.toFixed(2) }}
-                        </q-item-label>
-                      </q-item-section>
-                    </div>
-                    <div class="col">
-                      <q-item-section>
-                        <q-item-label>Mes</q-item-label>
-                        <q-skeleton type="QBadge" v-if="typeof(dashboardData?.movimientos_por_fecha.mes) === 'undefined'"/>
-                        <q-item-label caption v-else>
-                          ${{ dashboardData?.movimientos_por_fecha.mes.toFixed(2) }}
-                        </q-item-label>
-                      </q-item-section>
-                    </div>
-                  </div>
-                </q-card-section>
-              </q-expansion-item>
-            </q-card>
+          <div class="row q-col-gutter-md q-px-md">
+          <div class="col-12 col-lg-8 items-center justify-between" horizontal>    
+                    <q-btn-group unelevated class="row q-pb-sm" style="width:100%;">
+                    <div class="col-1"></div>
+                    <q-btn size="sm" :color="filterDays === 7 ? 'grey-4' : 'grey-2'"
+                      :text-color="filterDays === 7 ? 'black' : 'grey-7'" label="Semana" @click="filterDays = 7" class="col-3 q-mr-lg"/>
+                    <q-btn size="sm" :color="filterDays === 30 ? 'grey-4' : 'grey-2'"
+                      :text-color="filterDays === 30 ? 'black' : 'grey-7'" label="Mes" @click="filterDays = 30" class="col-3  q-mr-lg"/>
+                    <q-btn size="sm" :color="filterDays === 360 ? 'grey-4' : 'grey-2'"
+                      :text-color="filterDays === 360 ? 'black' : 'grey-7'" label="Año" @click="filterDays = 360" class="col-3 q-mr-lg"/>
+                    <div class="col-2"></div>
+                    </q-btn-group>
+                  
+                  <!-- MODIFICAR LA CUENTA DE LOS DIAS-->
+                <q-card>
+                  <q-card-section>
+                    <BarChart :data="movimientos" :range="filterDays" />
+                  </q-card-section>
+                </q-card>
           </div>
         </div>
-        <div class="row q-col-gutter-md q-pa-md">
-          <div class="col-12">
-            <q-card flat bordered>
-              <q-table title="Mis cuentas" :rows="dashboardData?.banks" :columns="columns" row-key="name"
-                no-data-label="No hay cuentas disponibles."
-              />
-            </q-card>
-          </div>
         </div>
       </div>
-      <div class="col-12 col-lg-4">
-        <div class="row q-col-gutter-md q-pa-md">
-          <div class="col-12">
-            <q-card flat bordered style="background-color: #fff;">
-              <q-card-section class="items-center justify-between" horizontal>
-                <q-card-section>
-                  <q-item-label>
-                    <q-btn dense flat :icon="expanded.calendario ? 'keyboard_arrow_down' : 'keyboard_arrow_up'"
-                      @click="() => expanded.calendario = !expanded.calendario" />
-                    Calendario
-                  </q-item-label>
-                </q-card-section>
-              </q-card-section>
-              <q-expansion-item v-model="expanded.calendario">
-                <q-date flat v-model="date" style="width: 100%" :minimal="$q.screen.lt.lg" />
-              </q-expansion-item>
-            </q-card>
-          </div>
-          <div class="col-12">
+<!--///////////////////////////////////////////////-->
 
+
+
+
+<!-- FALTA ACOMODAR VISUALMENTE
+          <div class="col-12">
             <q-card flat bordered>
               <q-card-section>
                 <q-item-label>
@@ -157,14 +107,26 @@
                 </q-list>
               </q-expansion-item>
             </q-card>
-
-
-
-          </div>
+           </div> -->
+<q-carousel 
+  v-model="slide"
+  transition-prev="scale"
+  transition-next="scale"
+  animated
+  control-color="grey-10"
+  padding
+  arrows
+  height="300px"
+  class="rounded-borders"
+>
+  <q-carousel-slide name="style" class="column no-wrap flex-center">
+    <div class="contenido2">
+        <div class="circulo2">
+          <q-icon name="las la-dollar-sign" color="white" size="25px" class="middle"></q-icon>
         </div>
-      </div>
-    </div>
-
+      </div> 
+  </q-carousel-slide>
+</q-carousel>
 
 
   </q-page>
@@ -179,9 +141,9 @@
   font-size: 5rem;
 }
 
-.q-expansion-item__container>.q-link {
+/*.q-expansion-item__container>.q-link {
   display: none;
-}
+}*/
 
 .q-date__header {
   border-radius: 0;
@@ -205,6 +167,9 @@ const balances = reactive({
   ingresos: null,
   gastos: null
 })
+
+const expandIcon = 'las la-angle-down';
+const expandedIcon = 'las la-angle-up';
 
 const currentPage = ref({
   movimientos: 1
@@ -283,6 +248,7 @@ const expanded = ref({
   gastos: true,
   calendario: true,
   movimientos: true,
+  inicio1: true
 })
 
 const today = new Date();
