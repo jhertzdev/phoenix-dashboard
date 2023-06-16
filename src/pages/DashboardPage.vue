@@ -124,6 +124,7 @@
         <div class="circulo2">
           <q-icon name="las la-dollar-sign" color="white" size="25px" class="middle"></q-icon>
         </div>
+
       </div> 
   </q-carousel-slide>
 </q-carousel>
@@ -238,7 +239,7 @@ function fetchDashboard() {
 onMounted(() => {
   let user = JSON.parse(localStorage.getItem('user'));
   if(user.form == 0) {
-    router.push('registro_part2')
+    router.push('registro2')
   }
   fetchDashboard()
 })

@@ -9,7 +9,10 @@
         <q-btn flat dense round icon="las la-sliders-h" aria-label="Menu" @click="toggleLeftDrawer" class="menu-btn" size="15px" style="z-index: 100000;"/>
         
         <template v-if="authStore.user">
-          <img src="../assets/logo-gofinapp.png" class="header-img"> 
+          <q-header-title>
+            <img src="../assets/logo-gofinapp.png" style="width: 60px; height: auto;">
+          </q-header-title>
+           
          
           <div class="text-align-center">
           </div>

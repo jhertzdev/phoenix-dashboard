@@ -297,7 +297,7 @@ const actualizar_form=async()=>{
   }
   await api.put('user/'+user.id,form).then((res)=>{
     localStorage.setItem('user',JSON.stringify(res.data.data));
-    router.push('/');
+    router.push('/#/');
   });
 }
 </script>

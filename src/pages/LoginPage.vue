@@ -3,18 +3,14 @@
 
     <div class="auth-card cardd" style="position: fixed; z-index: 100;">
       <div class="flex flex-center" style="font-family: 'Montserrat', sans-serif;">
-          <img src="../assets/logo-gofinapp.png" style="border-radius: 50%; width: 50%; height: 40%; padding-top: 7%; margin-bottom: -7%;" size="20%">
-        <div class="q-pt-lg">
-          <img src="../assets/titulo.png" class="titulo">
-        </div>
+          <img src="../assets/logo-gofinapp.png" style="border-radius: 50%; width: 80%; height: 80%; padding-top: 5%; margin-bottom: -30%;">
       </div>
-
-        <div class="auth-header login1" style="font-family: 'Montserrat', sans-serif;">
-          Iniciar Sesión
+        <div class="auth-header login1">
+          <h4 class="text-bold" style="font-family: 'Montserrat', sans-serif;">Iniciar Sesión</h4>
         </div>
         <q-form
           @submit="handleSubmit"
-          class="q-gutter-md"
+          class="q-gutter-md q-pl-md q-pr-md"
         >
           <q-input
             outlined
